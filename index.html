@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Les Coulisses du Réel — Studio V3</title>
+<title>Les Coulisses du Réel — Studio V4</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
@@ -67,12 +67,20 @@ h1 { font-family: var(--font-serif); font-size: 2.1rem; font-weight: 300; margin
 .section.open .section-body { max-height: 8000px; }
 .section-content { padding: 0 1.15rem 1.15rem; }
 
+.mode-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; margin-bottom: 1rem; }
+.mode-card { padding: 1.2rem 1rem; border-radius: var(--radius); border: 2px solid var(--border); background: var(--night-2); cursor: pointer; text-align: center; transition: all 0.2s; }
+.mode-card.selected { background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(232,200,96,0.08)); border-color: var(--gold); color: var(--gold-soft); }
+.mode-card .mode-icon { font-size: 2rem; margin-bottom: 0.4rem; display: block; }
+.mode-card .mode-name { font-size: 0.85rem; font-weight: 700; }
+.mode-card .mode-desc { font-size: 0.62rem; opacity: 0.7; margin-top: 0.3rem; line-height: 1.3; }
+
 .ref-drop { border: 2px dashed var(--border); border-radius: var(--radius); padding: 1.6rem 1rem; text-align: center; cursor: pointer; position: relative; background: var(--night-2); }
 .ref-drop.has-image { padding: 0; border-style: solid; border-color: var(--gold); }
 .ref-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
 .ref-icon { font-size: 2rem; opacity: 0.55; margin-bottom: 0.4rem; }
 .ref-text { font-size: 0.82rem; color: var(--ink-dim); line-height: 1.5; }
 .ref-text strong { color: var(--gold-soft); }
+.ref-preview { position: relative; display: block; }
 .ref-preview img { width: 100%; max-height: 380px; object-fit: contain; background: #000; display: block; }
 .ref-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 0.5rem 0.7rem; background: linear-gradient(transparent, rgba(8,8,14,0.95)); font-family: var(--font-mono); font-size: 0.65rem; color: var(--gold-soft); letter-spacing: 0.1em; text-transform: uppercase; }
 .ref-remove { position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(200,48,48,0.9); color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%; font-size: 0.9rem; cursor: pointer; }
@@ -100,6 +108,8 @@ select:focus, textarea:focus, input[type=text]:focus { outline: none; border-col
 .btn-primary:disabled { opacity: 0.25; cursor: not-allowed; }
 .btn-stop { width: 100%; padding: 0.85rem; border-radius: var(--radius); border: 1px solid var(--red); background: transparent; color: var(--red-soft); font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase; cursor: pointer; display: none; font-size: 0.82rem; margin-bottom: 0.8rem; }
 .btn-stop.visible { display: block; }
+.btn-more { width: 100%; padding: 0.9rem; border-radius: var(--radius); border: 1px solid var(--success); background: linear-gradient(135deg, rgba(74,157,106,0.2), rgba(74,157,106,0.1)); color: #a8d8b8; font-weight: 700; text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.82rem; cursor: pointer; margin-bottom: 0.8rem; display: none; }
+.btn-more.visible { display: block; }
 
 .images-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.7rem; margin-top: 1rem; }
 .image-card { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); background: var(--night-2); aspect-ratio: 9/16; position: relative; }
@@ -107,8 +117,7 @@ select:focus, textarea:focus, input[type=text]:focus { outline: none; border-col
 .image-card.loading::after { content: ''; position: absolute; inset: 0; background: linear-gradient(110deg, transparent 30%, rgba(212,175,55,0.12) 50%, transparent 70%); animation: shimmer 1.6s linear infinite; }
 @keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
 .image-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
-.image-card .img-label { position: absolute; bottom: 0; left: 0; right: 0; padding: 0.3rem 0.5rem; background: linear-gradient(transparent, rgba(8,8,14,0.95)); font-family: var(--font-mono); font-size: 0.6rem; color: var(--gold-soft); }
-.image-card .img-text { position: absolute; bottom: 8px; left: 8px; right: 8px; padding: 0.5rem; background: rgba(0,0,0,0.7); border-radius: 4px; font-size: 0.75rem; color: #fff; text-align: center; font-weight: 600; line-height: 1.3; }
+.image-card .img-text { position: absolute; bottom: 0; left: 0; right: 0; padding: 0.6rem 0.5rem; background: linear-gradient(transparent, rgba(0,0,0,0.9)); font-size: 0.72rem; color: #fff; text-align: center; font-weight: 600; line-height: 1.3; text-shadow: 0 2px 4px rgba(0,0,0,0.9); }
 
 .videos-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.9rem; margin-top: 1rem; }
 .video-card { border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border); background: #000; }
@@ -158,15 +167,15 @@ select:focus, textarea:focus, input[type=text]:focus { outline: none; border-col
 <body>
 
 <header>
-  <div class="studio-mark">Les Coulisses du Réel · Studio</div>
+  <div class="studio-mark">Les Coulisses du Réel · Studio V4</div>
   <h1>Les Coulisses du Réel</h1>
-  <p class="subtitle">Vingt images · vingt textes · quatre vidéos</p>
+  <p class="subtitle">Personnages ou Images · Textes IA · Vidéos TikTok</p>
 </header>
 
 <div class="info-banner">
-  <strong>Le studio.</strong> Ajoutez <strong class="hl-gold">une image de référence</strong>, choisissez une <strong class="hl-gold">ambiance</strong> et un <strong class="hl-gold">thème</strong>.
-  L'IA génère <strong class="hl-gold">20 textes uniques</strong> sur le thème, puis <strong class="hl-gold">20 images</strong> qui les portent.
-  L'app assemble ensuite <strong class="hl-gold">4 vidéos</strong> de 5 images, prêtes à poster sur TikTok.
+  <strong>Choisissez votre mode.</strong> <strong class="hl-gold">Personnages</strong> = 20 variations de votre portrait.
+  <strong class="hl-gold">Images</strong> = 20 visuels conceptuels sur votre thème, relançables à l'infini.
+  Chaque session génère <strong class="hl-gold">20 textes IA</strong> et <strong class="hl-gold">4 vidéos TikTok</strong>.
 </div>
 
 <div class="api-panel" id="api-panel">
@@ -184,16 +193,37 @@ select:focus, textarea:focus, input[type=text]:focus { outline: none; border-col
   </div>
 </div>
 
-<div class="section open" id="section-ref">
+<div class="section open" id="section-mode">
+  <div class="section-header" data-toggle="section-mode">
+    <span class="section-title">🎯 Mode de génération <span class="badge gold">choix obligatoire</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="mode-grid">
+      <div class="mode-card" data-mode="images">
+        <span class="mode-icon">🎭</span>
+        <div class="mode-name">IMAGES</div>
+        <div class="mode-desc">Conceptuelles, symboliques, abstraites<br>♾️ Illimité en relançant</div>
+      </div>
+      <div class="mode-card" data-mode="characters">
+        <span class="mode-icon">👤</span>
+        <div class="mode-name">PERSONNAGES</div>
+        <div class="mode-desc">20 variations de votre portrait<br>Image de référence obligatoire</div>
+      </div>
+    </div>
+  </div></div>
+</div>
+
+<div class="section" id="section-ref">
   <div class="section-header" data-toggle="section-ref">
-    <span class="section-title">🎬 Image de référence <span class="badge gold">obligatoire</span></span>
+    <span class="section-title">🎬 Image de référence <span class="badge gold" id="ref-badge">optionnelle</span></span>
     <span class="chevron">▼</span>
   </div>
   <div class="section-body"><div class="section-content">
     <div class="ref-drop" id="ref-drop">
       <input type="file" accept="image/*" id="ref-image-input">
       <div class="ref-icon">🎥</div>
-      <div class="ref-text"><strong>Cliquez pour choisir votre image</strong><br>Un portrait, une scène, un moment des coulisses…</div>
+      <div class="ref-text"><strong>Cliquez pour choisir votre image</strong><br>Portrait ou visuel d'inspiration</div>
     </div>
   </div></div>
 </div>
@@ -230,13 +260,17 @@ select:focus, textarea:focus, input[type=text]:focus { outline: none; border-col
   🎬 Lancer · 20 images + 4 vidéos
 </button>
 
+<button type="button" class="btn-more" id="more-btn">
+  ➕ Générer 20 de plus
+</button>
+
 <button type="button" class="btn-stop" id="stop-btn">
   ⏹ Arrêter la génération
 </button>
 
 <div class="section hidden" id="section-texts">
   <div class="section-header" data-toggle="section-texts">
-    <span class="section-title">✍️ Textes générés par l'IA <span class="badge gold" id="texts-count">0/20</span></span>
+    <span class="section-title">✍️ Textes générés par l'IA <span class="badge gold" id="texts-count">0</span></span>
     <span class="chevron">▼</span>
   </div>
   <div class="section-body"><div class="section-content">
@@ -246,7 +280,7 @@ select:focus, textarea:focus, input[type=text]:focus { outline: none; border-col
 
 <div class="section hidden" id="section-results">
   <div class="section-header" data-toggle="section-results">
-    <span class="section-title">🎞️ Vos 20 images <span class="badge gold" id="results-count">0/20</span></span>
+    <span class="section-title">🎞️ Vos images <span class="badge gold" id="results-count">0</span></span>
     <span class="chevron">▼</span>
   </div>
   <div class="section-body"><div class="section-content">
@@ -256,7 +290,7 @@ select:focus, textarea:focus, input[type=text]:focus { outline: none; border-col
 
 <div class="section hidden" id="section-videos">
   <div class="section-header" data-toggle="section-videos">
-    <span class="section-title">🎥 Vos 4 vidéos TikTok <span class="badge green" id="videos-count">0/4</span></span>
+    <span class="section-title">🎥 Vos vidéos TikTok <span class="badge green" id="videos-count">0</span></span>
     <span class="chevron">▼</span>
   </div>
   <div class="section-body"><div class="section-content">
@@ -288,20 +322,17 @@ select:focus, textarea:focus, input[type=text]:focus { outline: none; border-col
 
 <script>
 // ══════════════════════════════════════════════════════════════════
-// CONFIG AGNES
+// CONFIG
 // ══════════════════════════════════════════════════════════════════
 const API_BASE = 'https://apihub.agnes-ai.com/v1';
 const MODEL_TEXT = 'agnes-2.5-flash';
 const MODEL_IMAGE = 'agnes-image-2.1-flash';
 const IMAGE_PARALLEL = 3;
 const IMAGE_INTERVAL_MS = 3400;
-const IMAGE_INTERVAL_MIN = 3200;
-const IMAGE_INTERVAL_MAX = 12000;
-const IMAGE_INTERVAL_SAFE = 4000;
 const API_KEY_STORAGE = 'agnes_api_key';
-const WAKE_LOCK_PREF = 'agnes_wakelock_enabled_coulisses';
+const WAKE_LOCK_PREF = 'agnes_wakelock_enabled_coulisses_v4';
 const REF_MAX_SIDE = 1280;
-const TOTAL_IMAGES = 20;
+const BATCH_SIZE = 20;
 const IMAGES_PER_VIDEO = 5;
 const SECONDS_PER_IMAGE = 2;
 
@@ -309,58 +340,45 @@ const SECONDS_PER_IMAGE = 2;
 // AMBIANCES
 // ══════════════════════════════════════════════════════════════════
 const VIBES = [
-  { id: 'nocturne', icon: '🌙', name: 'Nocturne', desc: 'Lumières chaudes, nuit',
-    prompt: 'cinematic night shooting, warm golden practical lights, deep shadows, moody atmosphere, film grain, 35mm' },
-  { id: 'studio', icon: '🎬', name: 'Studio', desc: 'Plateau de tournage',
-    prompt: 'professional film set, cinema camera rigs, cables, clapperboard, softbox lighting, authentic production atmosphere' },
-  { id: 'vintage', icon: '📽️', name: 'Vintage', desc: 'Grain argentique',
-    prompt: 'vintage 1970s cinema aesthetic, faded warm colors, analog film grain, retro color grading, classic Hollywood' },
-  { id: 'noir', icon: '🕵️', name: 'Noir & Blanc', desc: 'Contraste dramatique',
-    prompt: 'film noir aesthetic, high contrast black and white, dramatic chiaroscuro, venetian blind shadows, 1940s mystery' },
-  { id: 'neon', icon: '🌃', name: 'Néon Urbain', desc: 'Ville la nuit',
-    prompt: 'neon-soaked urban night, wet asphalt reflections, pink and cyan neon signs, blade runner aesthetic' },
-  { id: 'golden', icon: '🌅', name: 'Golden Hour', desc: 'Lumière dorée',
-    prompt: 'golden hour cinematic lighting, warm amber sunlight, long dramatic shadows, hazy glow, lens flare' },
-  { id: 'mono', icon: '⚫', name: 'Monochrome', desc: 'Élégant N&B',
-    prompt: 'elegant black and white, dramatic single-source lighting, deep black background, high contrast monochrome' },
-  { id: 'mystere', icon: '🔮', name: 'Mystérieux', desc: 'Ambiance énigmatique',
-    prompt: 'mysterious cinematic atmosphere, fog, shadows, dramatic single light source, ambiguous narrative, enigmatic' },
-  { id: 'tech', icon: '🌐', name: 'Technologique', desc: 'Futur & IA',
-    prompt: 'futuristic tech aesthetic, holographic interfaces, data streams, digital overlays, cybernetic atmosphere, AI revolution' },
-  { id: 'consommation', icon: '🛒', name: 'Consommation', desc: 'Société de consommation',
-    prompt: 'consumer society aesthetic, product shelves, shopping cart, saturated colors, ironic advertising mood' },
-  { id: 'media', icon: '📺', name: 'Média', desc: 'Information & écrans',
-    prompt: 'media atmosphere, television screens, news coverage montage, screens everywhere, information overload' },
+  { id: 'surveillance', icon: '📹', name: 'Surveillance', desc: 'Caméras, écrans, contrôle',
+    prompt: 'surveillance cameras, CCTV aesthetic, screens everywhere, control room, watching, surveillance state, dystopian vision' },
   { id: 'truman', icon: '🎭', name: 'Truman Show', desc: 'Réalité truquée',
-    prompt: 'suburban uncanny, perfect artificial set design, surreal bright lighting, hidden cameras, Truman Show aesthetic, social commentary' }
+    prompt: 'suburban uncanny, perfect artificial set design, surreal bright lighting, hidden cameras, Truman Show aesthetic' },
+  { id: 'noir', icon: '⚫', name: 'Noir & Blanc', desc: 'Contraste dramatique',
+    prompt: 'high contrast black and white, dramatic chiaroscuro, film noir, deep shadows' },
+  { id: 'neon', icon: '🌃', name: 'Néon Urbain', desc: 'Ville la nuit',
+    prompt: 'neon-soaked urban night, wet reflections, pink and cyan lights, blade runner aesthetic' },
+  { id: 'tech', icon: '🌐', name: 'Technologique', desc: 'Futur & IA',
+    prompt: 'futuristic tech aesthetic, holographic interfaces, data streams, digital overlays, cybernetic' },
+  { id: 'illusion', icon: '🔮', name: 'Illusion', desc: 'Miroir, brume, mensonge',
+    prompt: 'illusion aesthetic, mirrors, fog, distorted reality, dreamlike, misleading perspectives' },
+  { id: 'consommation', icon: '🛒', name: 'Consommation', desc: 'Société de consommation',
+    prompt: 'consumer society aesthetic, product shelves, saturated colors, ironic advertising mood' },
+  { id: 'media', icon: '📺', name: 'Média', desc: 'Information & écrans',
+    prompt: 'media atmosphere, television screens, news montage, screens everywhere, information overload' },
+  { id: 'mystere', icon: '🌫️', name: 'Mystérieux', desc: 'Ambiance énigmatique',
+    prompt: 'mysterious cinematic atmosphere, fog, shadows, dramatic single light source' },
+  { id: 'symbolique', icon: '🔺', name: 'Symbolique', desc: 'Objets, signes',
+    prompt: 'symbolic imagery, abstract concepts, metaphorical visuals, philosophical aesthetic' }
 ];
 
 // ══════════════════════════════════════════════════════════════════
-// THÈMES PRÉCHARGÉS
+// THÈMES
 // ══════════════════════════════════════════════════════════════════
 const THEMES = [
   { id: 'truman', name: 'Effet Truman Show', desc: 'Et si ta vie était une mise en scène ?',
     prompt: 'Et si ta vie ressemblait à The Truman Show sans que tu le saches ? Théâtre du quotidien, mise en scène de la réalité, illusions collectives, caméras cachées.' },
   { id: 'realite', name: 'Réalité et illusion', desc: 'Ce que tu vois n\'est pas ce qui est',
-    prompt: 'Réalité et illusion, ce que tu vois n\'est pas ce qui est, perception trompeuse, construction sociale de la réalité, récits imposés.' },
+    prompt: 'Réalité et illusion, ce que tu vois n\'est pas ce qui est, perception trompeuse, construction sociale de la réalité.' },
   { id: 'societe', name: 'Société et technologie', desc: 'Qui contrôle ton attention ?',
-    prompt: 'Société et technologie, qui contrôle ton attention, l\'algorithme qui te connaît, capitalisme de surveillance, addiction aux écrans.' },
+    prompt: 'Société et technologie, qui contrôle ton attention, l\'algorithme qui te connaît, capitalisme de surveillance.' },
   { id: 'liberte', name: 'Liberté et contrôle', desc: 'Es-tu vraiment libre ?',
-    prompt: 'Liberté et contrôle, es-tu vraiment libre, soft power, discipline sociale, consentement fabriqué, aliénation moderne.' },
+    prompt: 'Liberté et contrôle, es-tu vraiment libre, soft power, discipline sociale, consentement fabriqué.' },
   { id: 'conso', name: 'Consommation et bonheur', desc: 'Achète, tu seras heureux',
-    prompt: 'Consommation et bonheur, achète et tu seras heureux, illusion du progrès, frustration planifiée, bonheur marchandise.' },
+    prompt: 'Consommation et bonheur, achète et tu seras heureux, illusion du progrès, frustration planifiée.' },
   { id: 'info', name: 'Information et vérité', desc: 'Qui décide de ce que tu sais ?',
-    prompt: 'Information et vérité, qui décide de ce que tu sais, fabrication du consentement, fake news, propagande douce, guerre de l\'information.' }
+    prompt: 'Information et vérité, qui décide de ce que tu sais, fabrication du consentement, fake news, propagande douce.' }
 ];
-
-const DEFAULT_THEME_PROMPTS = {
-  truman: 'Et si ta vie ressemblait à The Truman Show sans que tu le saches ? Théâtre du quotidien, mise en scène de la réalité.',
-  realite: 'Réalité et illusion, ce que tu vois n\'est pas ce qui est.',
-  societe: 'Société et technologie, qui contrôle ton attention ?',
-  liberte: 'Liberté et contrôle, es-tu vraiment libre ?',
-  conso: 'Consommation et bonheur, achète et tu seras heureux.',
-  info: 'Information et vérité, qui décide de ce que tu sais ?'
-};
 
 // ══════════════════════════════════════════════════════════════════
 // ÉTAT
@@ -368,8 +386,9 @@ const DEFAULT_THEME_PROMPTS = {
 const state = {
   isRunning: false,
   stopRequested: false,
+  mode: 'images',
   referenceImage: null,
-  selectedVibe: 'nocturne',
+  selectedVibe: 'surveillance',
   selectedTheme: 'truman',
   customTheme: '',
   customPrompt: '',
@@ -377,11 +396,9 @@ const state = {
   images: [],
   videos: [],
   completed: 0,
-  failed: 0
+  failed: 0,
+  batchCount: 0
 };
-
-let createImageIntervalMs = IMAGE_INTERVAL_SAFE;
-let imageAttemptsSinceLastError = 0;
 
 // ══════════════════════════════════════════════════════════════════
 // UTILS
@@ -390,7 +407,7 @@ function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ 
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
 // ══════════════════════════════════════════════════════════════════
-// CONSOLE DEBUG
+// DEBUG
 // ══════════════════════════════════════════════════════════════════
 let debugCount = 0, debugEntries = [], debugCollapsed = false;
 function debugLog(level, category, message, data) {
@@ -402,7 +419,7 @@ function debugLog(level, category, message, data) {
   let html = '<span class="debug-time">' + time + '</span><span class="debug-cat">[' + esc(category) + ']</span><span>' + esc(message) + '</span>';
   if (data !== undefined && data !== null) {
     let dataStr = typeof data === 'string' ? data : (() => { try { return JSON.stringify(data, null, 2); } catch(e) { return String(data); } })();
-    if (dataStr.length > 2000) dataStr = dataStr.slice(0, 2000) + '…';
+    if (dataStr.length > 1500) dataStr = dataStr.slice(0, 1500) + '…';
     html += '<pre style="margin:0.2rem 0 0 1rem; font-size:0.6rem; color:#f0e0b8; max-height:80px; overflow:auto;">' + esc(dataStr) + '</pre>';
   }
   entry.innerHTML = html;
@@ -418,7 +435,7 @@ function clearDebug() { document.getElementById('debug-body').innerHTML = ''; de
 function copyDebug() {
   const lines = debugEntries.map(e => e.time + ' [' + e.category + '] ' + e.message).join('\n');
   if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(lines).then(() => showToast('Console copiée', 'success')).catch(() => showToast('Copie impossible', 'error'));
+    navigator.clipboard.writeText(lines).then(() => showToast('Copié', 'success')).catch(() => {});
   }
 }
 function toggleDebugCollapse() {
@@ -462,7 +479,6 @@ function startCanvasStream() {
     if (!canvas || !video) return false;
     const ctx = canvas.getContext('2d');
     ctx.fillStyle = '#000'; ctx.fillRect(0, 0, 2, 2);
-    if (typeof canvas.captureStream !== 'function') return false;
     canvasStream = canvas.captureStream(1);
     let toggle = false;
     canvasInterval = setInterval(() => { toggle = !toggle; ctx.fillStyle = toggle ? '#000' : '#010101'; ctx.fillRect(0, 0, 2, 2); }, 1000);
@@ -487,13 +503,13 @@ async function deactivateWakeLock() { await releaseWakeLockAPI(); stopCanvasStre
 function updateWakeStatus() {
   const el = document.getElementById('wake-status'), txt = document.getElementById('wake-status-text'), btn = document.getElementById('wake-toggle-btn');
   if (!el || !txt || !btn) return;
-  el.classList.remove('active', 'warn');
+  el.classList.remove('active');
   const active = wakeLockSentinel !== null || canvasStream !== null;
   if (wakeLockEnabled && active) { el.classList.add('active'); txt.textContent = '✅ Écran allumé'; btn.textContent = 'Désactiver'; }
   else { txt.textContent = '💤 Veille automatique'; btn.textContent = 'Garder l\'écran allumé'; }
 }
 async function toggleWakeLock() {
-  if (wakeLockEnabled) { wakeLockEnabled = false; await deactivateWakeLock(); localStorage.setItem(WAKE_LOCK_PREF, '0'); showToast('Veille automatique', 'warn'); }
+  if (wakeLockEnabled) { wakeLockEnabled = false; await deactivateWakeLock(); localStorage.setItem(WAKE_LOCK_PREF, '0'); showToast('Veille auto', 'warn'); }
   else { wakeLockEnabled = true; const ok = await activateWakeLock(); localStorage.setItem(WAKE_LOCK_PREF, '1'); showToast(ok ? 'Écran allumé' : 'Non supporté', ok ? 'success' : 'warn'); }
   updateWakeStatus();
 }
@@ -509,7 +525,6 @@ function saveApiKey() {
   if (!input) return;
   const key = input.value.trim();
   if (!key) { localStorage.removeItem(API_KEY_STORAGE); updateApiPanel(); showToast('Clé supprimée', 'warn'); return; }
-  if (!key.startsWith('sk-')) { if (!confirm('La clé ne commence pas par "sk-". Sauvegarder ?')) return; }
   localStorage.setItem(API_KEY_STORAGE, key);
   updateApiPanel(); showToast('Clé enregistrée ✓', 'success');
   debugLog('success', 'API', 'Clé : ' + key.slice(0, 8) + '…' + key.slice(-4));
@@ -526,11 +541,13 @@ function updateApiPanel() {
 function updateGenerateBtn() {
   const btn = document.getElementById('generate-btn');
   if (!btn) return;
-  const hasKey = !!getApiKey(), hasRef = !!state.referenceImage, hasTheme = !!(state.customTheme || state.selectedTheme);
-  btn.disabled = !hasKey || !hasRef || !hasTheme || state.isRunning;
+  const hasKey = !!getApiKey(), hasRef = !!state.referenceImage;
+  const needsRef = state.mode === 'characters';
+  const canRun = hasKey && (!needsRef || hasRef) && !state.isRunning;
+  btn.disabled = !canRun;
   if (state.isRunning) btn.textContent = '🎬 Création en cours…';
-  else if (!hasRef) btn.textContent = '🎬 Ajoutez une image de référence';
   else if (!hasKey) btn.textContent = '🎬 Ajoutez votre clé API';
+  else if (needsRef && !hasRef) btn.textContent = '🎬 Ajoutez une image de référence';
   else btn.textContent = '🎬 Lancer · 20 images + 4 vidéos';
 }
 function setStatus(text) {
@@ -574,13 +591,13 @@ function updateRefPreview() {
   if (!drop) return;
   if (state.referenceImage) {
     drop.classList.add('has-image');
-    drop.innerHTML = '<div class="ref-preview"><img src="' + state.referenceImage + '" alt="Référence"><div class="ref-label">Référence · base des 20 images</div><button type="button" class="ref-remove" id="ref-remove-btn">✕</button></div>';
+    drop.innerHTML = '<div class="ref-preview"><img src="' + state.referenceImage + '" alt="Référence"><div class="ref-label">Référence</div><button type="button" class="ref-remove" id="ref-remove-btn">✕</button></div>';
     document.getElementById('ref-remove-btn').addEventListener('click', (e) => {
       e.stopPropagation(); state.referenceImage = null; updateRefPreview(); updateGenerateBtn();
     });
   } else {
     drop.classList.remove('has-image');
-    drop.innerHTML = '<input type="file" accept="image/*" id="ref-image-input"><div class="ref-icon">🎥</div><div class="ref-text"><strong>Cliquez pour choisir votre image</strong><br>Un portrait, une scène, un moment des coulisses…</div>';
+    drop.innerHTML = '<input type="file" accept="image/*" id="ref-image-input"><div class="ref-icon">🎥</div><div class="ref-text"><strong>Cliquez pour choisir votre image</strong><br>Portrait ou visuel d\'inspiration</div>';
     bindRefInput();
   }
 }
@@ -622,7 +639,7 @@ async function apiFetch(url, options = {}, label = 'API') {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// GÉNÉRATION DES 20 TEXTES
+// GÉNÉRATION TEXTES
 // ══════════════════════════════════════════════════════════════════
 async function generateTexts() {
   const theme = state.customTheme || (THEMES.find(t => t.id === state.selectedTheme) || THEMES[0]).prompt;
@@ -632,38 +649,30 @@ THÈME : ${theme}
 
 MISSION : Génère 20 phrases courtes et percutantes sur ce thème.
 
-CONTRAINTES STRICTES :
+CONTRAINTES :
 - Chaque phrase fait entre 5 et 12 mots MAXIMUM
-- Chaque phrase est soit une question, soit une affirmation forte
-- Ton : philosophique, réflexif, légèrement provocateur
-- Style : court, impactant, mémorable
-- PAS de clichés, PAS de morale, PAS de leçon
+- Chaque phrase est une question ou une affirmation forte
+- Ton philosophique, réflexif, légèrement provocateur
+- Style court, impactant, mémorable
+- PAS de clichés, PAS de morale
 - Utilise "tu" quand c'est possible
 - Commence parfois par "Et si..."
 
-FORMAT DE SORTIE : Exactement 20 lignes. Une phrase par ligne. Rien d'autre. Pas de numérotation. Pas de guillemets. Pas de markdown.
+FORMAT : Exactement 20 lignes. Une phrase par ligne. Pas de numérotation. Pas de guillemets.
 
-EXEMPLES DE CE QU'ON ATTEND :
-Et si ta vie ressemblait à un décor ?
-Qui décide de ce que tu vois ?
-On ne te ment pas. On choisit.
-Derrière chaque écran, une intention.
-Tu scroles. Tu ne penses plus.
-La liberté est devenue un slogan.
-
-MAINTENANT GÉNÈRE LES 20 PHRASES SUR LE THÈME : ${theme}`;
+THÈME À TRAITER : ${theme}`;
 
   const body = {
     model: MODEL_TEXT,
     messages: [
-      { role: 'system', content: 'Tu génères des phrases courtes et percutantes pour TikTok. Tu réponds UNIQUEMENT avec 20 lignes, une phrase par ligne. Pas de numérotation, pas de guillemets, pas de commentaire.' },
+      { role: 'system', content: 'Tu génères des phrases courtes et percutantes. Tu réponds UNIQUEMENT avec 20 lignes, une phrase par ligne.' },
       { role: 'user', content: userPrompt }
     ],
     temperature: 0.95,
     max_tokens: 2000
   };
 
-  debugLog('api', 'TEXTES', 'Génération de 20 textes sur : ' + theme.slice(0, 60) + '…');
+  debugLog('api', 'TEXTES', 'Génération sur : ' + theme.slice(0, 60));
   setStatus('L\'IA écrit 20 textes…');
 
   const res = await apiFetch(API_BASE + '/chat/completions', {
@@ -672,15 +681,10 @@ MAINTENANT GÉNÈRE LES 20 PHRASES SUR LE THÈME : ${theme}`;
     body: JSON.stringify(body)
   }, 'Textes');
 
-  if (!res.ok) {
-    const err = await res.text();
-    debugLog('error', 'TEXTES', 'HTTP ' + res.status, err.slice(0, 500));
-    throw new Error('HTTP ' + res.status);
-  }
-
+  if (!res.ok) throw new Error('HTTP ' + res.status);
   const data = await res.json();
   const content = data.choices && data.choices[0] && data.choices[0].message && data.choices[0].message.content;
-  if (!content) throw new Error('Pas de contenu texte');
+  if (!content) throw new Error('Pas de contenu');
 
   let lines = content.split('\n')
     .map(l => l.trim())
@@ -688,39 +692,72 @@ MAINTENANT GÉNÈRE LES 20 PHRASES SUR LE THÈME : ${theme}`;
     .filter(l => l.length > 3 && l.length < 150);
 
   if (lines.length < 20) {
-    debugLog('warn', 'TEXTES', 'Seulement ' + lines.length + ' textes valides, on complète');
     while (lines.length < 20) lines.push('Et si tout n\'était qu\'une mise en scène ?');
   }
   if (lines.length > 20) lines = lines.slice(0, 20);
-
-  debugLog('success', 'TEXTES', '20 textes générés');
   return lines;
 }
 
 // ══════════════════════════════════════════════════════════════════
-// GÉNÉRATION IMAGE
+// BUILD PROMPT IMAGE
 // ══════════════════════════════════════════════════════════════════
 function buildImagePrompt(index, text) {
   const vibe = VIBES.find(v => v.id === state.selectedVibe) || VIBES[0];
   const theme = state.customTheme || (THEMES.find(t => t.id === state.selectedTheme) || THEMES[0]).prompt;
-  const angles = ['medium shot, eye-level', 'close-up portrait', 'slight low angle', 'three-quarter profile', 'wide establishing shot', 'over-the-shoulder framing', 'high angle looking down', 'silhouette against light', 'symmetrical composition', 'dynamic tilted angle'];
-  const angle = angles[index % angles.length];
 
-  const parts = [
-    'Generate ONE cinematic image based on the reference image provided.',
-    '',
-    'AESTHETIC: ' + vibe.prompt + '.',
-    'THEME: ' + theme,
-    'MEANING: This image illustrates the following concept: "' + text + '"',
-    'CAMERA: ' + angle + '.',
-    '',
-    'CRITICAL IDENTITY LOCK: Preserve the subject\'s identity from the reference image — facial features, hair, skin tone, distinctive characteristics.',
-    '',
-    'Portrait 9:16 vertical, cinematic composition, photorealistic, film grain, high detail.',
-    'No text, no watermarks, no logos, no subtitles.'
-  ];
-  if (state.customPrompt && state.customPrompt.trim()) parts.push('', 'ADDITIONAL DIRECTION: ' + state.customPrompt.trim());
-  return parts.join('\n');
+  if (state.mode === 'characters') {
+    const angles = ['medium shot, eye-level', 'close-up portrait', 'slight low angle', 'three-quarter profile', 'wide shot', 'over-the-shoulder', 'high angle looking down', 'symmetrical', 'dynamic angle'];
+    const angle = angles[index % angles.length];
+    const parts = [
+      'Generate ONE cinematic image based on the reference image provided.',
+      'AESTHETIC: ' + vibe.prompt + '.',
+      'THEME: ' + theme,
+      'MEANING: This image illustrates: "' + text + '"',
+      'CAMERA: ' + angle + '.',
+      'CRITICAL IDENTITY LOCK: Preserve the subject\'s identity — facial features, hair, skin tone, distinctive characteristics.',
+      'Portrait 9:16 vertical, cinematic, photorealistic.',
+      'No text, no watermarks, no logos.'
+    ];
+    if (state.customPrompt) parts.push('ADDITIONAL: ' + state.customPrompt);
+    return parts.join('\n');
+  } else {
+    // Mode Images
+    const concepts = [
+      'surveillance camera on a pole watching an empty street',
+      'wall of old TV screens showing static',
+      'giant eye looking through a glass window',
+      'theater curtain half-open revealing bright light',
+      'broken mirror reflecting a fragmented reality',
+      'crowd of identical people walking in the same direction',
+      'closed doors floating in empty space',
+      'silhouette of a person standing before a giant screen',
+      'camera lens extreme close-up with reflections',
+      'control room with dozens of monitors',
+      'person holding a mask in front of their face',
+      'glitchy digital distortion of a familiar scene',
+      'empty theater with a single spotlight',
+      'hand reaching toward a screen it cannot touch',
+      'labyrinth of mirrors with infinite reflections',
+      'robot arm painting a picture of a human face',
+      'TV static forming a human silhouette',
+      'spiral staircase going down into darkness',
+      'person walking on a tightrope above the void',
+      'giant clock with its hands falling off'
+    ];
+    const concept = concepts[index % concepts.length];
+    const parts = [
+      'Generate ONE symbolic conceptual image.',
+      'SCENE: ' + concept + '.',
+      'AESTHETIC: ' + vibe.prompt + '.',
+      'THEME: ' + theme,
+      'MEANING: This image illustrates: "' + text + '"',
+      'STYLE: philosophical, cinematic, symbolic, no human portrait in focus, no text visible, atmospheric.',
+      'Portrait 9:16 vertical, photorealistic, cinematic composition, film grain.',
+      'No text, no watermarks, no logos.'
+    ];
+    if (state.customPrompt) parts.push('ADDITIONAL: ' + state.customPrompt);
+    return parts.join('\n');
+  }
 }
 
 async function generateImage(prompt) {
@@ -730,101 +767,76 @@ async function generateImage(prompt) {
     headers: { 'Authorization': 'Bearer ' + getApiKey(), 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
   }, 'Image');
-  if (!res.ok) { const err = await res.text(); debugLog('error', 'IMAGE', 'HTTP ' + res.status, err.slice(0, 500)); throw new Error('HTTP ' + res.status); }
+  if (!res.ok) throw new Error('HTTP ' + res.status);
   const data = await res.json();
   const item = data.data && data.data[0];
-  if (!item) throw new Error('Pas de donnée image');
-  if (item.url) return item.url;
-  if (item.b64_json) return 'data:image/png;base64,' + item.b64_json;
-  throw new Error('Format image inconnu');
+  if (!item) throw new Error('Pas de donnée');
+  return item.url || ('data:image/png;base64,' + item.b64_json);
 }
 
 // ══════════════════════════════════════════════════════════════════
-// INCRUSTATION TEXTE SUR IMAGE
+// INCRUSTATION TEXTE
 // ══════════════════════════════════════════════════════════════════
 async function addTextToImage(imageUrl, text) {
-  return new Promise((resolve, reject) => {
+  return new Promise((resolve) => {
     const img = new Image();
     img.crossOrigin = 'anonymous';
     img.onload = () => {
       try {
         const canvas = document.createElement('canvas');
-        const targetW = 1080, targetH = 1920;
-        canvas.width = targetW; canvas.height = targetH;
+        const W = 1080, H = 1920;
+        canvas.width = W; canvas.height = H;
         const ctx = canvas.getContext('2d');
 
-        // Dessiner l'image en couvrant tout le canvas
-        const scale = Math.max(targetW / img.width, targetH / img.height);
+        const scale = Math.max(W / img.width, H / img.height);
         const w = img.width * scale, h = img.height * scale;
-        const x = (targetW - w) / 2, y = (targetH - h) / 2;
-        ctx.drawImage(img, x, y, w, h);
+        ctx.drawImage(img, (W - w) / 2, (H - h) / 2, w, h);
 
-        // Assombrir le bas de l'image
-        const gradient = ctx.createLinearGradient(0, targetH - 500, 0, targetH);
+        const gradient = ctx.createLinearGradient(0, H - 600, 0, H);
         gradient.addColorStop(0, 'rgba(0,0,0,0)');
         gradient.addColorStop(1, 'rgba(0,0,0,0.85)');
         ctx.fillStyle = gradient;
-        ctx.fillRect(0, targetH - 500, targetW, 500);
+        ctx.fillRect(0, H - 600, W, 600);
 
-        // Écrire le texte
         ctx.fillStyle = '#ffffff';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
 
-        // Taille de police adaptative
         let fontSize = 64;
         ctx.font = '700 ' + fontSize + 'px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
-
-        // Découper en lignes si trop long
-        const maxWidth = targetW - 120;
+        const maxWidth = W - 120;
         const words = text.split(' ');
-        const lines = [];
-        let currentLine = '';
+        let lines = [], currentLine = '';
         for (const word of words) {
-          const testLine = currentLine ? currentLine + ' ' + word : word;
-          const metrics = ctx.measureText(testLine);
-          if (metrics.width > maxWidth && currentLine) {
-            lines.push(currentLine);
-            currentLine = word;
-          } else {
-            currentLine = testLine;
-          }
+          const test = currentLine ? currentLine + ' ' + word : word;
+          if (ctx.measureText(test).width > maxWidth && currentLine) { lines.push(currentLine); currentLine = word; }
+          else currentLine = test;
         }
         if (currentLine) lines.push(currentLine);
 
-        // Si trop de lignes, réduire la police
         if (lines.length > 4) {
           fontSize = 48;
           ctx.font = '700 ' + fontSize + 'px -apple-system, BlinkMacSystemFont, "Helvetica Neue", Arial, sans-serif';
-          // Recalculer
-          lines.length = 0; currentLine = '';
+          lines = []; currentLine = '';
           for (const word of words) {
-            const testLine = currentLine ? currentLine + ' ' + word : word;
-            if (ctx.measureText(testLine).width > maxWidth && currentLine) { lines.push(currentLine); currentLine = word; }
-            else currentLine = testLine;
+            const test = currentLine ? currentLine + ' ' + word : word;
+            if (ctx.measureText(test).width > maxWidth && currentLine) { lines.push(currentLine); currentLine = word; }
+            else currentLine = test;
           }
           if (currentLine) lines.push(currentLine);
         }
 
         const lineHeight = fontSize * 1.25;
-        const totalTextHeight = lines.length * lineHeight;
-        const startY = targetH - 200 - totalTextHeight / 2;
+        const totalH = lines.length * lineHeight;
+        const startY = H - 250 - totalH / 2;
 
-        // Ombre du texte
         ctx.shadowColor = 'rgba(0,0,0,0.9)';
         ctx.shadowBlur = 20;
-        ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 4;
-
-        lines.forEach((line, i) => {
-          ctx.fillText(line, targetW / 2, startY + i * lineHeight + lineHeight / 2);
-        });
+        lines.forEach((line, i) => { ctx.fillText(line, W / 2, startY + i * lineHeight + lineHeight / 2); });
 
         resolve(canvas.toDataURL('image/jpeg', 0.88));
-      } catch (e) {
-        debugLog('warn', 'TEXTE', 'Erreur incrustation : ' + e.message);
-        resolve(imageUrl);
-      }
+      } catch (e) { resolve(imageUrl); }
     };
     img.onerror = () => resolve(imageUrl);
     img.src = imageUrl;
@@ -832,7 +844,7 @@ async function addTextToImage(imageUrl, text) {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// ASSEMBLAGE VIDÉO
+// CRÉATION VIDÉO
 // ══════════════════════════════════════════════════════════════════
 async function createVideoFromImages(imageUrls) {
   return new Promise(async (resolve, reject) => {
@@ -840,23 +852,19 @@ async function createVideoFromImages(imageUrls) {
       const canvas = document.createElement('canvas');
       canvas.width = 1080; canvas.height = 1920;
       const ctx = canvas.getContext('2d');
-
       const stream = canvas.captureStream(30);
       let mimeType = 'video/webm';
       if (MediaRecorder.isTypeSupported('video/webm;codecs=vp9')) mimeType = 'video/webm;codecs=vp9';
       else if (MediaRecorder.isTypeSupported('video/webm;codecs=vp8')) mimeType = 'video/webm;codecs=vp8';
-      else if (MediaRecorder.isTypeSupported('video/mp4')) mimeType = 'video/mp4';
 
-      const recorder = new MediaRecorder(stream, { mimeType: mimeType, videoBitsPerSecond: 4000000 });
+      const recorder = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 4000000 });
       const chunks = [];
       recorder.ondataavailable = (e) => { if (e.data.size > 0) chunks.push(e.data); };
       recorder.onstop = () => {
         const blob = new Blob(chunks, { type: mimeType });
-        const url = URL.createObjectURL(blob);
-        resolve({ url, blob, mimeType });
+        resolve({ url: URL.createObjectURL(blob), blob, mimeType });
       };
 
-      // Précharger toutes les images
       const loadedImages = await Promise.all(imageUrls.map(url => new Promise((res, rej) => {
         const img = new Image();
         img.crossOrigin = 'anonymous';
@@ -866,39 +874,26 @@ async function createVideoFromImages(imageUrls) {
       })));
 
       recorder.start();
-
-      const SEC_PER_IMAGE = SECONDS_PER_IMAGE;
       const FPS = 30;
-      const totalFrames = loadedImages.length * SEC_PER_IMAGE * FPS;
+      const totalFrames = loadedImages.length * SECONDS_PER_IMAGE * FPS;
 
       for (let frame = 0; frame < totalFrames; frame++) {
         const t = frame / FPS;
-        const imgIndex = Math.min(Math.floor(t / SEC_PER_IMAGE), loadedImages.length - 1);
-        const img = loadedImages[imgIndex];
-
-        // Fond noir
-        ctx.fillStyle = '#000';
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-        // Image en couvrant
+        const idx = Math.min(Math.floor(t / SECONDS_PER_IMAGE), loadedImages.length - 1);
+        const img = loadedImages[idx];
+        ctx.fillStyle = '#000'; ctx.fillRect(0, 0, canvas.width, canvas.height);
         const scale = Math.max(canvas.width / img.width, canvas.height / img.height);
         const w = img.width * scale, h = img.height * scale;
-        const x = (canvas.width - w) / 2, y = (canvas.height - h) / 2;
-        ctx.drawImage(img, x, y, w, h);
-
+        ctx.drawImage(img, (canvas.width - w) / 2, (canvas.height - h) / 2, w, h);
         await new Promise(r => requestAnimationFrame(r));
       }
-
       recorder.stop();
-    } catch (e) {
-      debugLog('error', 'VIDÉO', 'Erreur assemblage : ' + e.message);
-      reject(e);
-    }
+    } catch (e) { reject(e); }
   });
 }
 
 // ══════════════════════════════════════════════════════════════════
-// QUEUE PARALLÈLE
+// QUEUE
 // ══════════════════════════════════════════════════════════════════
 function createRateLimitedQueue(maxConcurrent, minIntervalMs) {
   let running = 0, lastStart = 0;
@@ -907,8 +902,7 @@ function createRateLimitedQueue(maxConcurrent, minIntervalMs) {
   function tryNext() {
     if (running >= maxConcurrent) return;
     if (queue.length === 0) { if (running === 0 && resolveIdle) { resolveIdle(); resolveIdle = null; } return; }
-    const now = Date.now();
-    const wait = Math.max(0, lastStart + minIntervalMs - now);
+    const wait = Math.max(0, lastStart + minIntervalMs - Date.now());
     if (wait > 0) { setTimeout(tryNext, wait); return; }
     const task = queue.shift();
     running++; lastStart = Date.now();
@@ -921,8 +915,16 @@ function createRateLimitedQueue(maxConcurrent, minIntervalMs) {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// RENDU UI
+// RENDU
 // ══════════════════════════════════════════════════════════════════
+function renderModes() {
+  document.querySelectorAll('.mode-card').forEach(el => {
+    el.classList.toggle('selected', el.dataset.mode === state.mode);
+  });
+  const badge = document.getElementById('ref-badge');
+  if (badge) badge.textContent = state.mode === 'characters' ? 'obligatoire' : 'optionnelle';
+}
+
 function renderVibes() {
   const grid = document.getElementById('vibe-grid');
   if (!grid) return;
@@ -967,33 +969,28 @@ function renderTextsList() {
   list.innerHTML = state.texts.map((t, i) =>
     '<div class="text-item"><span class="text-num">' + (i + 1) + '.</span><span class="text-content">' + esc(t) + '</span></div>'
   ).join('');
-  document.getElementById('texts-count').textContent = state.texts.length + '/20';
+  document.getElementById('texts-count').textContent = state.texts.length;
 }
 
 function renderImagesGrid() {
   const grid = document.getElementById('images-grid');
   if (!grid) return;
-  let html = '';
-  for (let i = 0; i < TOTAL_IMAGES; i++) {
-    const img = state.images[i];
-    const label = 'N° ' + (i + 1);
+  grid.innerHTML = state.images.map((img, i) => {
     if (img && img.url) {
-      html += '<div class="image-card done" data-img="' + i + '"><img src="' + img.url + '" alt=""><div class="img-text">' + esc(state.texts[i] || '') + '</div></div>';
-    } else {
-      html += '<div class="image-card loading" data-img="' + i + '">' + label + '</div>';
+      return '<div class="image-card done"><img src="' + img.url + '" alt=""><div class="img-text">' + esc(state.texts[i] || '') + '</div></div>';
     }
-  }
-  grid.innerHTML = html;
+    return '<div class="image-card loading">N° ' + (i + 1) + '</div>';
+  }).join('');
   const countEl = document.getElementById('results-count');
-  if (countEl) countEl.textContent = state.completed + '/' + TOTAL_IMAGES;
+  if (countEl) countEl.textContent = state.images.filter(i => i && i.url).length;
 }
 
 function updateImageCard(index, url) {
-  const el = document.querySelector('.image-card[data-img="' + index + '"]');
-  if (!el) return;
-  el.classList.remove('loading');
-  el.classList.add('done');
-  el.innerHTML = '<img src="' + url + '" alt=""><div class="img-text">' + esc(state.texts[index] || '') + '</div>';
+  const cards = document.querySelectorAll('.image-card');
+  if (!cards[index]) return;
+  cards[index].classList.remove('loading');
+  cards[index].classList.add('done');
+  cards[index].innerHTML = '<img src="' + url + '" alt=""><div class="img-text">' + esc(state.texts[index] || '') + '</div>';
 }
 
 function renderVideosGrid() {
@@ -1006,118 +1003,105 @@ function renderVideosGrid() {
   grid.innerHTML = state.videos.map((v, i) =>
     '<div class="video-card">' +
       '<video src="' + v.url + '" controls playsinline preload="metadata"></video>' +
-      '<div class="video-label">Vidéo ' + (i + 1) + ' · 5 images · 10s</div>' +
-      '<a class="video-download" href="' + v.url + '" download="coulisses-video-' + (i + 1) + '.webm">⬇ Télécharger</a>' +
+      '<div class="video-label">Vidéo ' + (i + 1) + '</div>' +
+      '<a class="video-download" href="' + v.url + '" download="coulisses-' + (i + 1) + '.webm">⬇ Télécharger</a>' +
     '</div>'
   ).join('');
-  document.getElementById('videos-count').textContent = state.videos.length + '/4';
+  document.getElementById('videos-count').textContent = state.videos.length;
 }
 
 // ══════════════════════════════════════════════════════════════════
 // PIPELINE PRINCIPAL
 // ══════════════════════════════════════════════════════════════════
-async function startGeneration() {
+async function runBatch() {
   if (state.isRunning) return;
-  if (!state.referenceImage) { showToast('Ajoutez une image de référence', 'error'); return; }
   if (!getApiKey()) { showToast('Ajoutez votre clé API', 'error'); return; }
+  if (state.mode === 'characters' && !state.referenceImage) { showToast('Ajoutez une image de référence', 'error'); return; }
 
   state.isRunning = true;
   state.stopRequested = false;
   state.completed = 0;
   state.failed = 0;
   state.texts = [];
-  state.images = new Array(TOTAL_IMAGES).fill(null);
-  state.videos = [];
-  createImageIntervalMs = IMAGE_INTERVAL_SAFE;
+  state.images = new Array(BATCH_SIZE).fill(null);
 
-  document.getElementById('section-texts').classList.add('hidden');
+  document.getElementById('generate-btn').disabled = true;
+  document.getElementById('more-btn').classList.remove('visible');
+  document.getElementById('stop-btn').classList.add('visible');
   document.getElementById('section-results').classList.remove('hidden');
   document.getElementById('section-results').classList.add('open');
-  document.getElementById('section-videos').classList.add('hidden');
-  document.getElementById('stop-btn').classList.add('visible');
-  document.getElementById('generate-btn').disabled = true;
+  document.getElementById('section-texts').classList.add('hidden');
   updateGenerateBtn();
   renderImagesGrid();
 
   await ensureWakeLockActive();
 
-  const startTime = Date.now();
+  debugLog('state', 'START', '════════════════════════════════════════');
+  debugLog('state', 'START', 'Batch #' + (state.batchCount + 1) + ' — mode : ' + state.mode);
 
   try {
-    // ═══ ÉTAPE 1 : TEXTES ═══
-    debugLog('state', 'START', '════════════════════════════════════════');
-    debugLog('state', 'START', 'V3 — Génération complète');
+    // 1. TEXTES
     state.texts = await generateTexts();
     renderTextsList();
-    debugLog('success', 'TEXTES', '20 textes générés');
+    debugLog('success', 'TEXTES', '20 textes OK');
 
-    // ═══ ÉTAPE 2 : IMAGES ═══
-    setStatus('Génération des 20 images…');
-    debugLog('state', 'PHASE', 'Images parallèle x' + IMAGE_PARALLEL);
+    // 2. IMAGES
+    setStatus('Génération des images…');
     const queue = createRateLimitedQueue(IMAGE_PARALLEL, IMAGE_INTERVAL_MS);
-    const imageTasks = [];
-    for (let i = 0; i < TOTAL_IMAGES; i++) {
+    const tasks = [];
+    for (let i = 0; i < BATCH_SIZE; i++) {
       const idx = i;
-      imageTasks.push(queue.add(async () => {
+      tasks.push(queue.add(async () => {
         if (state.stopRequested) return;
         try {
           const prompt = buildImagePrompt(idx, state.texts[idx] || '');
           const url = await generateImage(prompt);
-          // Incruster le texte
           const withText = await addTextToImage(url, state.texts[idx] || '');
           state.images[idx] = { url: withText, originalUrl: url };
           updateImageCard(idx, withText);
           state.completed++;
-          debugLog('success', 'IMAGE ' + (idx + 1) + '/20', 'OK');
-          setStatus('Images : ' + state.completed + ' / 20');
-          renderImagesGrid();
+          setStatus('Images : ' + state.completed + ' / ' + BATCH_SIZE);
         } catch (e) {
-          if (e.message === 'Arrêt demandé') return;
-          state.failed++;
-          state.completed++;
-          debugLog('error', 'IMAGE ' + (idx + 1), e.message);
-          renderImagesGrid();
+          if (e.message !== 'Arrêt demandé') {
+            state.failed++;
+            debugLog('error', 'IMAGE ' + (idx + 1), e.message);
+          }
         }
       }));
     }
-    await Promise.allSettled(imageTasks);
+    await Promise.allSettled(tasks);
     await queue.idle();
 
-    if (state.stopRequested) throw new Error('Arrêt demandé');
-
-    // ═══ ÉTAPE 3 : VIDÉOS ═══
-    setStatus('Assemblage des 4 vidéos…');
-    debugLog('state', 'PHASE', 'Assemblage vidéos');
-    const validImages = state.images.filter(img => img && img.url).map(img => img.url);
-    if (validImages.length < IMAGES_PER_VIDEO) throw new Error('Pas assez d\'images pour créer des vidéos');
-
-    const numVideos = Math.floor(validImages.length / IMAGES_PER_VIDEO);
-    for (let v = 0; v < numVideos; v++) {
-      if (state.stopRequested) break;
-      setStatus('Vidéo ' + (v + 1) + ' / ' + numVideos + '…');
-      const videoImages = validImages.slice(v * IMAGES_PER_VIDEO, (v + 1) * IMAGES_PER_VIDEO);
-      try {
-        const videoResult = await createVideoFromImages(videoImages);
-        state.videos.push(videoResult);
-        renderVideosGrid();
-        debugLog('success', 'VIDÉO ' + (v + 1), 'OK');
-      } catch (e) {
-        debugLog('error', 'VIDÉO ' + (v + 1), e.message);
+    // 3. VIDÉOS
+    if (!state.stopRequested) {
+      setStatus('Assemblage des vidéos…');
+      const valid = state.images.filter(i => i && i.url).map(i => i.url);
+      const numVideos = Math.floor(valid.length / IMAGES_PER_VIDEO);
+      for (let v = 0; v < numVideos; v++) {
+        if (state.stopRequested) break;
+        setStatus('Vidéo ' + (v + 1) + '/' + numVideos + '…');
+        try {
+          const videoImages = valid.slice(v * IMAGES_PER_VIDEO, (v + 1) * IMAGES_PER_VIDEO);
+          const result = await createVideoFromImages(videoImages);
+          state.videos.push(result);
+          renderVideosGrid();
+        } catch (e) { debugLog('error', 'VIDÉO', e.message); }
       }
     }
 
-    const totalElapsed = ((Date.now() - startTime) / 1000).toFixed(1);
-    const summary = '✦ ' + state.completed + ' images · ' + state.videos.length + ' vidéos en ' + totalElapsed + 's ✦';
-    debugLog('state', 'FIN', summary);
+    state.batchCount++;
+    const summary = '✦ ' + state.completed + ' images · ' + state.videos.length + ' vidéos ✦';
+    debugLog('success', 'FIN', summary);
     setStatus(summary);
-    showToast(state.videos.length + ' vidéos générées', 'success', 4000);
-    setTimeout(() => setStatus(null), 5000);
+    showToast(summary, 'success', 4000);
+
+    if (!state.stopRequested) {
+      document.getElementById('more-btn').classList.add('visible');
+    }
 
   } catch (e) {
     debugLog('error', 'GLOBAL', e.message);
-    setStatus('Erreur : ' + e.message.slice(0, 50));
     showToast('Erreur : ' + e.message.slice(0, 60), 'error');
-    setTimeout(() => setStatus(null), 4000);
   }
 
   state.isRunning = false;
@@ -1125,6 +1109,7 @@ async function startGeneration() {
   document.getElementById('stop-btn').classList.remove('visible');
   updateGenerateBtn();
   await deactivateWakeLock();
+  setTimeout(() => setStatus(null), 4000);
 }
 
 function stopGeneration() {
@@ -1142,80 +1127,79 @@ function stopGeneration() {
   document.getElementById('api-save-btn').addEventListener('click', saveApiKey);
   document.getElementById('api-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); saveApiKey(); } });
 
-  // BOUTON COLLER LA CLÉ (CONSERVÉ)
-  const pasteBtn = document.getElementById('api-paste-btn');
-  if (pasteBtn) {
-    pasteBtn.addEventListener('click', async () => {
-      try {
-        let text = '';
-        if (navigator.clipboard && navigator.clipboard.readText) {
-          text = await navigator.clipboard.readText();
-        } else {
-          const input = document.getElementById('api-key-input');
-          input.focus();
-          document.execCommand('paste');
-          text = input.value;
-        }
-        text = (text || '').trim();
-        if (!text) { showToast('Presse-papier vide', 'error'); return; }
-        if (!text.startsWith('sk-')) { showToast('La clé doit commencer par "sk-"', 'error'); return; }
-        document.getElementById('api-key-input').value = text;
-        localStorage.setItem('agnes_api_key', text);
-        updateApiPanel();
-        showToast('Clé enregistrée ✓ (' + text.length + ' caractères)', 'success');
-        debugLog('success', 'API', 'Clé collée : ' + text.slice(0, 8) + '…' + text.slice(-4));
-      } catch (e) {
-        showToast('Erreur : ' + e.message, 'error');
+  // BOUTON COLLER
+  document.getElementById('api-paste-btn').addEventListener('click', async () => {
+    try {
+      let text = '';
+      if (navigator.clipboard && navigator.clipboard.readText) {
+        text = await navigator.clipboard.readText();
+      } else {
+        const input = document.getElementById('api-key-input');
+        input.focus();
+        document.execCommand('paste');
+        text = input.value;
       }
-    });
-  }
+      text = (text || '').trim();
+      if (!text) { showToast('Presse-papier vide', 'error'); return; }
+      if (!text.startsWith('sk-')) { showToast('Clé invalide (doit commencer par sk-)', 'error'); return; }
+      document.getElementById('api-key-input').value = text;
+      localStorage.setItem('agnes_api_key', text);
+      updateApiPanel();
+      showToast('Clé enregistrée ✓ (' + text.length + ' caractères)', 'success');
+    } catch (e) { showToast('Erreur : ' + e.message, 'error'); }
+  });
 
-  // Sections collapsibles
+  // SECTIONS
   document.querySelectorAll('[data-toggle]').forEach(header => {
     header.addEventListener('click', () => { document.getElementById(header.dataset.toggle).classList.toggle('open'); });
   });
 
-  // Image de référence
+  // MODES
+  document.querySelectorAll('.mode-card').forEach(el => {
+    el.addEventListener('click', () => {
+      state.mode = el.dataset.mode;
+      renderModes(); updateGenerateBtn();
+    });
+  });
+
+  // IMAGE REF
   bindRefInput();
 
-  // Vibe + Theme grids
+  // VIBES + THEMES
   renderVibes();
   renderThemes();
 
-  // Contrôles
+  // CONTROLS
   document.getElementById('custom-theme').addEventListener('input', e => {
     state.customTheme = e.target.value.trim();
-    if (state.customTheme) {
-      state.selectedTheme = '';
-      renderThemes();
-    }
+    if (state.customTheme) { state.selectedTheme = ''; renderThemes(); }
     updateGenerateBtn();
   });
   document.getElementById('custom-prompt').addEventListener('input', e => { state.customPrompt = e.target.value; });
 
-  // Boutons
-  document.getElementById('generate-btn').addEventListener('click', startGeneration);
+  // BOUTONS
+  document.getElementById('generate-btn').addEventListener('click', runBatch);
+  document.getElementById('more-btn').addEventListener('click', runBatch);
   document.getElementById('stop-btn').addEventListener('click', stopGeneration);
   document.getElementById('wake-toggle-btn').addEventListener('click', toggleWakeLock);
 
-  // Debug
+  // DEBUG
   document.getElementById('debug-header').addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON') return; toggleDebugCollapse(); });
   document.getElementById('debug-collapse-btn').addEventListener('click', (e) => { e.stopPropagation(); toggleDebugCollapse(); });
   document.getElementById('debug-clear-btn').addEventListener('click', (e) => { e.stopPropagation(); clearDebug(); });
   document.getElementById('debug-copy-btn').addEventListener('click', (e) => { e.stopPropagation(); copyDebug(); });
 
-  // Wake lock
+  // WAKE
   try { wakeLockEnabled = localStorage.getItem(WAKE_LOCK_PREF) === '1'; } catch (e) {}
   if (wakeLockEnabled) activateWakeLock().then(() => updateWakeStatus());
 
-  // Init
+  // INIT
+  renderModes();
   updateApiPanel();
   updateWakeStatus();
-  renderImagesGrid();
 
-  debugLog('success', 'INIT', 'Coulisses Reel V3 prêt');
-  debugLog('info', 'INIT', 'Modèle texte : ' + MODEL_TEXT);
-  debugLog('info', 'INIT', 'Modèle image : ' + MODEL_IMAGE);
+  debugLog('success', 'INIT', 'Coulisses Reel V4 prêt');
+  debugLog('info', 'INIT', 'Mode par défaut : ' + state.mode);
   debugLog('info', 'INIT', 'Bouton "Coller la clé" : actif');
 })();
 </script>
