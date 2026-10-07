@@ -1,0 +1,1338 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Coulisses Reel Studio — 20 images virales</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+:root {
+  --night: #08080e; --night-2: #101018; --night-3: #181824;
+  --panel: #14141e; --panel-2: #1c1c28; --border: #282838; --border-soft: #202030;
+  --gold: #d4af37; --gold-soft: #e8c860; --gold-deep: #a08020;
+  --champagne: #f0e0b8; --cream: #e8e0d0;
+  --red: #c83030; --red-soft: #e04848;
+  --ink: #ece8e0; --ink-dim: #8888a0; --ink-faint: #484858;
+  --success: #4a9d6a; --error: #c85a4a; --warn: #d4a017;
+  --radius: 6px; --font-serif: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: ui-monospace, 'SF Mono', Menlo, monospace;
+}
+body {
+  font-family: var(--font-sans); background: var(--night);
+  background-image:
+    radial-gradient(circle at 15% 0%, rgba(212,175,55,0.08) 0%, transparent 45%),
+    radial-gradient(circle at 85% 100%, rgba(200,48,48,0.05) 0%, transparent 45%),
+    radial-gradient(circle at 50% 50%, rgba(212,175,55,0.02) 0%, transparent 60%);
+  background-attachment: fixed;
+  color: var(--ink); min-height: 100vh; padding: 1.5rem 1rem 20rem;
+  max-width: 900px; margin: 0 auto; font-size: 15px; line-height: 1.55;
+}
+header { text-align: center; margin-bottom: 1.8rem; position: relative; padding: 1rem 0 1.5rem; }
+header::before {
+  content: ''; position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+  width: 60px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+header::after {
+  content: ''; position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+  width: 140px; height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), var(--red), var(--gold), transparent);
+  opacity: 0.4;
+}
+.studio-mark {
+  display: inline-block; font-family: var(--font-serif);
+  font-size: 0.7rem; letter-spacing: 0.5em; color: var(--gold);
+  text-transform: uppercase; margin-bottom: 0.7rem; opacity: 0.85;
+}
+h1 {
+  font-family: var(--font-serif); font-size: 2.1rem; font-weight: 300;
+  letter-spacing: 0.02em; margin-bottom: 0.4rem;
+  background: linear-gradient(135deg, var(--gold) 0%, var(--champagne) 50%, var(--gold-soft) 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.subtitle { font-family: var(--font-serif); font-size: 0.9rem; color: var(--ink-dim); font-style: italic; letter-spacing: 0.08em; }
+
+.info-banner {
+  background: linear-gradient(135deg, rgba(212,175,55,0.06), rgba(200,48,48,0.04));
+  border-left: 3px solid var(--gold); border-radius: var(--radius);
+  padding: 1rem 1.15rem; margin-bottom: 1rem; font-size: 0.78rem; color: var(--ink-dim);
+  line-height: 1.6; position: relative;
+}
+.info-banner::before {
+  content: '🎬'; position: absolute; top: 0.7rem; right: 0.9rem;
+  font-size: 1.4rem; opacity: 0.25;
+}
+.info-banner strong { color: var(--ink); }
+.info-banner .hl-gold { color: var(--gold-soft); font-weight: 600; }
+
+.api-panel {
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+  padding: 1.1rem 1.2rem; margin-bottom: 1rem;
+}
+.api-panel.ok { box-shadow: inset 3px 0 0 var(--success); }
+.api-key-input {
+  width: 100%; padding: 0.8rem 1rem; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--night-2); color: var(--ink);
+  font-family: var(--font-mono); font-size: 0.82rem; margin-bottom: 0.5rem;
+}
+.api-key-input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+.api-save-btn {
+  width: 100%; padding: 0.8rem; border-radius: var(--radius);
+  border: 1px solid var(--gold-deep);
+  background: linear-gradient(135deg, rgba(212,175,55,0.15), rgba(232,200,96,0.08));
+  color: var(--gold-soft); font-weight: 700; cursor: pointer; margin-bottom: 0.5rem;
+  text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.78rem;
+  transition: all 0.2s;
+}
+.api-save-btn:active { transform: scale(0.98); }
+.api-status-line {
+  font-size: 0.75rem; padding: 0.5rem 0.8rem; border-radius: var(--radius);
+  background: var(--night-2); color: var(--ink-dim); display: flex; align-items: center; gap: 0.5rem;
+  border: 1px solid var(--border-soft);
+}
+.api-status-line.ok { color: var(--success); background: rgba(74,157,106,0.06); }
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--ink-faint); flex-shrink: 0; }
+.api-status-line.ok .status-dot { background: var(--success); box-shadow: 0 0 8px var(--success); }
+.api-hint { font-size: 0.7rem; color: var(--ink-dim); margin-top: 0.4rem; }
+.api-hint a { color: var(--gold-soft); text-decoration: none; border-bottom: 1px dotted var(--gold-deep); }
+.stat-line {
+  font-size: 0.7rem; padding: 0.45rem 0.7rem; margin-top: 0.4rem;
+  background: var(--night-2); border-radius: var(--radius);
+  display: flex; justify-content: space-between; color: var(--ink-dim);
+  font-family: var(--font-mono); border: 1px solid var(--border-soft);
+}
+.wake-status {
+  font-size: 0.7rem; padding: 0.5rem 0.7rem; border-radius: var(--radius);
+  margin-top: 0.4rem; display: flex; justify-content: space-between; align-items: center;
+  background: rgba(212,175,55,0.06); color: var(--gold-soft);
+  border: 1px solid var(--gold-deep); flex-wrap: wrap; gap: 0.4rem;
+}
+.wake-status.active { background: rgba(74,157,106,0.08); color: var(--success); border-color: rgba(74,157,106,0.3); }
+.wake-status.warn { background: rgba(212,160,23,0.08); color: var(--warn); }
+.wake-status button {
+  background: transparent; border: 1px solid currentColor; color: inherit;
+  padding: 0.25rem 0.6rem; border-radius: var(--radius); font-size: 0.65rem; cursor: pointer;
+  letter-spacing: 0.05em;
+}
+
+.section {
+  background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius);
+  margin-bottom: 0.9rem; overflow: hidden;
+}
+.section.open { box-shadow: 0 0 0 1px rgba(212,175,55,0.05), 0 4px 20px rgba(0,0,0,0.3); }
+.section-header {
+  padding: 0.95rem 1.15rem; cursor: pointer; display: flex; justify-content: space-between;
+  align-items: center; user-select: none;
+}
+.section-header:active { background: var(--panel-2); }
+.section-title {
+  font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.18em;
+  color: var(--ink); font-weight: 600; display: flex; align-items: center; gap: 0.5rem;
+}
+.section-title .badge {
+  font-size: 0.58rem; padding: 0.12rem 0.5rem; border: 1px solid var(--gold-deep);
+  border-radius: 2px; color: var(--gold-soft); letter-spacing: 0.1em; font-weight: 600;
+}
+.section-title .badge.gold { border-color: var(--gold); color: var(--gold); }
+.section-title .badge.red { border-color: var(--red); color: var(--red-soft); }
+.section-header .chevron { color: var(--ink-faint); font-size: 0.7rem; transition: all 0.3s; }
+.section.open .chevron { transform: rotate(180deg); color: var(--gold); }
+.section-body { max-height: 0; overflow: hidden; transition: max-height 0.4s; }
+.section.open .section-body { max-height: 6000px; }
+.section-content { padding: 0 1.15rem 1.15rem; }
+
+.ref-drop {
+  border: 2px dashed var(--border); border-radius: var(--radius);
+  padding: 1.6rem 1rem; text-align: center; cursor: pointer; position: relative;
+  background: var(--night-2); transition: all 0.2s;
+}
+.ref-drop:hover { border-color: var(--gold-deep); background: rgba(212,175,55,0.02); }
+.ref-drop.has-image { padding: 0; border-style: solid; border-color: var(--gold); }
+.ref-drop input[type=file] { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.ref-icon { font-size: 2rem; opacity: 0.55; margin-bottom: 0.4rem; }
+.ref-text { font-size: 0.82rem; color: var(--ink-dim); line-height: 1.5; }
+.ref-text strong { color: var(--gold-soft); }
+.ref-hint { font-size: 0.65rem; color: var(--ink-faint); margin-top: 0.4rem; font-family: var(--font-mono); }
+.ref-preview { position: relative; display: block; }
+.ref-preview img { width: 100%; max-height: 380px; object-fit: contain; background: #000; display: block; }
+.ref-preview .ref-label {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 0.5rem 0.7rem;
+  background: linear-gradient(transparent, rgba(8,8,14,0.95));
+  font-family: var(--font-mono); font-size: 0.65rem; color: var(--gold-soft);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.ref-remove {
+  position: absolute; top: 0.5rem; right: 0.5rem; background: rgba(200,48,48,0.9);
+  color: #fff; border: none; width: 30px; height: 30px; border-radius: 50%;
+  font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center;
+}
+
+.control-row { margin-bottom: 1rem; }
+.control-row:last-child { margin-bottom: 0; }
+.control-label {
+  font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.15em;
+  color: var(--ink-dim); margin-bottom: 0.5rem; font-weight: 600; display: block;
+}
+select, textarea {
+  width: 100%; padding: 0.75rem 0.9rem; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--night-2); color: var(--ink);
+  font-family: var(--font-sans); font-size: 0.85rem;
+  -webkit-appearance: none; appearance: none;
+}
+select {
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23d4af37' d='M0 0l5 6 5-6z'/></svg>");
+  background-repeat: no-repeat; background-position: right 0.9rem center; background-size: 10px;
+  padding-right: 2rem;
+}
+select:focus, textarea:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px rgba(212,175,55,0.1); }
+select option { background: var(--night-3); color: var(--ink); }
+textarea { min-height: 85px; resize: vertical; line-height: 1.55; font-family: var(--font-sans); }
+
+.vibe-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.5rem; margin-top: 0.5rem;
+}
+.vibe-card {
+  padding: 0.75rem 0.7rem; border-radius: var(--radius);
+  border: 1px solid var(--border); background: var(--night-2); cursor: pointer;
+  transition: all 0.15s; text-align: center;
+}
+.vibe-card:active { transform: scale(0.98); }
+.vibe-card.selected {
+  background: linear-gradient(135deg, rgba(212,175,55,0.12), rgba(232,200,96,0.06));
+  border-color: var(--gold); color: var(--gold-soft);
+}
+.vibe-card .vibe-icon { font-size: 1.4rem; display: block; margin-bottom: 0.25rem; }
+.vibe-card .vibe-name { font-size: 0.72rem; font-weight: 600; line-height: 1.2; }
+.vibe-card .vibe-desc { font-size: 0.6rem; opacity: 0.6; margin-top: 0.15rem; line-height: 1.25; }
+
+.btn-primary {
+  width: 100%; padding: 1.15rem; border-radius: var(--radius);
+  border: 1px solid var(--gold-deep);
+  background: linear-gradient(135deg, rgba(212,175,55,0.25), rgba(232,200,96,0.15), rgba(200,48,48,0.12));
+  color: var(--gold-soft); font-size: 0.95rem; font-weight: 700;
+  letter-spacing: 0.22em; text-transform: uppercase; cursor: pointer;
+  margin-bottom: 0.8rem; transition: all 0.2s;
+}
+.btn-primary:active:not(:disabled) { transform: scale(0.98); }
+.btn-primary:disabled { opacity: 0.25; cursor: not-allowed; }
+.btn-stop {
+  width: 100%; padding: 0.85rem; border-radius: var(--radius);
+  border: 1px solid var(--red); background: transparent; color: var(--red-soft);
+  font-weight: 700; letter-spacing: 0.15em; text-transform: uppercase;
+  cursor: pointer; display: none; font-size: 0.82rem;
+}
+.btn-stop.visible { display: block; }
+
+.images-grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.7rem; margin-top: 1rem;
+}
+.image-card {
+  border-radius: var(--radius); overflow: hidden; border: 1px solid var(--border);
+  background: var(--night-2); aspect-ratio: 9/16; position: relative;
+}
+.image-card.loading {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--ink-faint); font-size: 0.62rem; font-family: var(--font-mono);
+  letter-spacing: 0.1em; text-transform: uppercase;
+}
+.image-card.loading::after {
+  content: ''; position: absolute; inset: 0;
+  background: linear-gradient(110deg, transparent 30%, rgba(212,175,55,0.12) 50%, transparent 70%);
+  animation: shimmer 1.6s linear infinite;
+}
+@keyframes shimmer { 0% { transform: translateX(-100%); } 100% { transform: translateX(100%); } }
+.image-card img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.image-card .img-label {
+  position: absolute; bottom: 0; left: 0; right: 0; padding: 0.3rem 0.5rem;
+  background: linear-gradient(transparent, rgba(8,8,14,0.95));
+  font-family: var(--font-mono); font-size: 0.6rem; color: var(--gold-soft);
+  letter-spacing: 0.08em; text-transform: uppercase;
+}
+.image-card.done { animation: fadeIn 0.5s ease; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+.status-bar {
+  position: fixed; bottom: 0; left: 0; right: 0;
+  background: var(--night-3); border-top: 1px solid var(--gold-deep);
+  padding: 0.85rem 1.1rem; display: flex; align-items: center; gap: 0.6rem;
+  font-family: var(--font-mono); font-size: 0.75rem; color: var(--ink);
+  transform: translateY(100%); transition: transform 0.35s; z-index: 100;
+  box-shadow: 0 -4px 20px rgba(0,0,0,0.5);
+}
+.status-bar.visible { transform: translateY(0); }
+.spinner {
+  width: 12px; height: 12px; border: 2px solid rgba(212,175,55,0.2);
+  border-top-color: var(--gold); border-radius: 50%;
+  animation: spin 0.8s linear infinite; flex-shrink: 0;
+}
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.toast {
+  position: fixed; top: 1.5rem; left: 50%; transform: translateX(-50%) translateY(-120px);
+  background: var(--night-3); border: 1px solid var(--border); border-left: 3px solid var(--gold);
+  padding: 0.85rem 1.3rem; border-radius: var(--radius); font-size: 0.8rem;
+  z-index: 1000; opacity: 0; transition: all 0.35s cubic-bezier(0.2,0.9,0.3,1.2);
+  max-width: 90vw; font-family: var(--font-sans);
+  box-shadow: 0 8px 32px rgba(0,0,0,0.6);
+}
+.toast.visible { transform: translateX(-50%) translateY(0); opacity: 1; }
+.toast.success { border-left-color: var(--success); }
+.toast.error { border-left-color: var(--error); }
+.toast.warn { border-left-color: var(--warn); }
+
+.debug-panel {
+  position: fixed; bottom: 0; left: 0; right: 0; height: 230px;
+  background: #050508; border-top: 2px solid var(--gold-deep);
+  z-index: 200; display: flex; flex-direction: column;
+  font-family: var(--font-mono); transition: height 0.3s;
+  box-shadow: 0 -8px 32px rgba(0,0,0,0.7);
+}
+.debug-panel.collapsed { height: 34px; }
+.debug-header {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 0.45rem 0.75rem; background: linear-gradient(90deg, #0d0d14, #161620);
+  border-bottom: 1px solid var(--border); cursor: pointer; flex-shrink: 0;
+}
+.debug-title {
+  font-size: 0.65rem; color: var(--gold); letter-spacing: 0.12em;
+  font-weight: 600; text-transform: uppercase; display: flex; align-items: center; gap: 0.5rem;
+}
+.debug-title .debug-badge {
+  font-size: 0.58rem; padding: 0.1rem 0.4rem; background: var(--gold);
+  color: var(--night); border-radius: 2px; font-weight: 700;
+}
+.debug-actions { display: flex; gap: 0.25rem; }
+.debug-actions button {
+  background: transparent; border: 1px solid var(--border); color: var(--ink-dim);
+  font-size: 0.6rem; padding: 0.2rem 0.5rem; border-radius: 2px; cursor: pointer;
+  letter-spacing: 0.05em; font-family: inherit;
+}
+.debug-actions button:hover { color: var(--gold); border-color: var(--gold-deep); }
+.debug-body {
+  flex: 1; overflow-y: auto; padding: 0.4rem 0.65rem; font-size: 0.68rem; line-height: 1.45;
+  color: #c8c8d0;
+}
+.debug-entry { margin-bottom: 0.25rem; padding: 0.15rem 0.35rem; border-left: 2px solid transparent; }
+.debug-entry.info { border-left-color: var(--ink-faint); }
+.debug-entry.success { border-left-color: var(--success); background: rgba(74,157,106,0.03); }
+.debug-entry.warn { border-left-color: var(--warn); background: rgba(212,160,23,0.03); }
+.debug-entry.error { border-left-color: var(--error); background: rgba(200,90,74,0.05); }
+.debug-entry.api { border-left-color: var(--gold); background: rgba(212,175,55,0.03); }
+.debug-entry.ai { border-left-color: var(--champagne); background: rgba(240,224,184,0.04); }
+.debug-time { color: var(--ink-faint); margin-right: 0.4rem; font-size: 0.6rem; }
+.debug-cat { color: var(--gold-soft); font-weight: 600; margin-right: 0.35rem; }
+
+.hidden { display: none !important; }
+#noSleepCanvas { position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: -1; }
+#noSleepVideo { position: fixed; top: 0; left: 0; width: 1px; height: 1px; opacity: 0.01; pointer-events: none; z-index: -1; }
+
+@media (max-width: 480px) {
+  h1 { font-size: 1.75rem; }
+  .images-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  .vibe-grid { grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); }
+  body { padding-bottom: 18rem; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="studio-mark">Les Coulisses du Réel · Studio</div>
+  <h1>Coulisses Reel</h1>
+  <p class="subtitle">Vingt images, un univers · votre référence devient un film</p>
+</header>
+
+<div class="info-banner">
+  <strong>Votre studio personnel.</strong> Ajoutez <strong class="hl-gold">une image de référence</strong> — un portrait, une scène, un moment des coulisses.
+  Choisissez une <strong class="hl-gold">ambiance</strong> parmi les univers de cinéma validés pour la viralité.
+  L'application génère <strong class="hl-gold">20 variations uniques</strong> dans une esthétique cohérente de plateau de tournage,
+  préservant l'identité de votre sujet. Inspiré des stratégies de cohérence de personnage validées par les tests Agnes.
+</div>
+
+<div class="api-panel" id="api-panel">
+  <input type="password" class="api-key-input" id="api-key-input" placeholder="Collez votre clé API Agnes (sk-...)" autocomplete="off" spellcheck="false">
+  <button type="button" class="api-save-btn" id="api-save-btn">Enregistrer la clé</button>
+  <div class="api-status-line" id="api-status-line">
+    <span class="status-dot"></span>
+    <span id="api-status-text">Aucune clé API enregistrée</span>
+  </div>
+  <div class="api-hint">
+    Clé gratuite sur <a href="https://platform.agnes-ai.com" target="_blank">platform.agnes-ai.com</a>
+  </div>
+  <div class="stat-line">
+    <span>📊 Vitesse image : <span id="stat-speed">en attente</span></span>
+    <span id="stat-samples">0 génération</span>
+  </div>
+  <div class="wake-status" id="wake-status">
+    <span id="wake-status-text">💤 Veille automatique</span>
+    <button type="button" id="wake-toggle-btn">Garder l'écran allumé</button>
+  </div>
+</div>
+
+<div class="section open" id="section-ref">
+  <div class="section-header" data-toggle="section-ref">
+    <span class="section-title">🎬 Image de référence <span class="badge gold">obligatoire</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="ref-drop" id="ref-drop">
+      <input type="file" accept="image/*" id="ref-image-input">
+      <div class="ref-icon">🎥</div>
+      <div class="ref-text"><strong>Cliquez pour choisir votre image</strong><br>Un portrait, une scène, un moment des coulisses…</div>
+      <div class="ref-hint">Cette image sera la base de toutes les 20 variations.</div>
+    </div>
+  </div></div>
+</div>
+
+<div class="section open" id="section-vibe">
+  <div class="section-header" data-toggle="section-vibe">
+    <span class="section-title">✨ Ambiance · Style unique <span class="badge red">coulisses</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="vibe-grid" id="vibe-grid"></div>
+  </div></div>
+</div>
+
+<div class="section open" id="section-custom">
+  <div class="section-header" data-toggle="section-custom">
+    <span class="section-title">✍️ Direction créative <span class="badge">optionnel</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="control-row">
+      <label class="control-label">Décrivez votre vision (optionnel)</label>
+      <textarea id="custom-prompt" placeholder="Ex : « Un plateau de tournage nocturne, lumières dorées, clap de cinéma, ambiance champagne et cuir, regard confident »"></textarea>
+    </div>
+    <div class="control-row">
+      <label class="control-label">Intensité de la transformation</label>
+      <select id="intensity-select">
+        <option value="subtle">Subtile — Le sujet reste très reconnaissable</option>
+        <option value="moderate" selected>Modérée — Équilibre identité / ambiance</option>
+        <option value="strong">Forte — L'ambiance domine complètement</option>
+      </select>
+    </div>
+  </div></div>
+</div>
+
+<button type="button" class="btn-primary" id="generate-btn" disabled>
+  🎬 Lancer · 20 images virales
+</button>
+
+<button type="button" class="btn-stop" id="stop-btn">
+  ⏹ Arrêter la génération
+</button>
+
+<div class="section hidden" id="section-results">
+  <div class="section-header" data-toggle="section-results">
+    <span class="section-title">🎞️ Votre série · 20 images <span class="badge gold" id="results-count">0/20</span></span>
+    <span class="chevron">▼</span>
+  </div>
+  <div class="section-body"><div class="section-content">
+    <div class="images-grid" id="images-grid"></div>
+  </div></div>
+</div>
+
+<div class="status-bar" id="status-bar">
+  <div class="spinner"></div>
+  <span id="status-text">Préparation…</span>
+</div>
+
+<div class="toast" id="toast">
+  <span id="toast-icon">✓</span>
+  <span id="toast-text">Message</span>
+</div>
+
+<div class="debug-panel" id="debug-panel">
+  <div class="debug-header" id="debug-header">
+    <div class="debug-title">🖥️ Console <span class="debug-badge" id="debug-count">0</span></div>
+    <div class="debug-actions">
+      <button type="button" id="debug-copy-btn">Copier</button>
+      <button type="button" id="debug-clear-btn">Effacer</button>
+      <button type="button" id="debug-collapse-btn">−</button>
+    </div>
+  </div>
+  <div class="debug-body" id="debug-body"></div>
+</div>
+
+<canvas id="noSleepCanvas" width="2" height="2"></canvas>
+<video id="noSleepVideo" playsinline muted loop></video>
+
+<script>
+// ══════════════════════════════════════════════════════════════════
+// PROTOCOLES AGNES (jamais modifiés)
+// ══════════════════════════════════════════════════════════════════
+const API_BASE = 'https://apihub.agnes-ai.com/v1';
+const MODEL_IMAGE = 'agnes-image-2.1-flash';
+const IMAGE_PARALLEL = 3;
+const IMAGE_INTERVAL_MS = 3400;
+const IMAGE_INTERVAL_MIN = 3200;
+const IMAGE_INTERVAL_MAX = 12000;
+const IMAGE_INTERVAL_SAFE = 4000;
+const API_KEY_STORAGE = 'agnes_api_key';
+const WAKE_LOCK_PREF = 'agnes_wakelock_enabled_coulisses';
+const TIMING_CACHE_KEY = 'coulisses_reel_timing';
+const REF_MAX_SIDE = 1280;
+const TOTAL_IMAGES = 20;
+
+// ══════════════════════════════════════════════════════════════════
+// UNIVERS COULISSES — ambiances validées pour la viralité
+// ══════════════════════════════════════════════════════════════════
+const VIBES = [
+  {
+    id: 'nocturne-gold',
+    icon: '🌙',
+    name: 'Nocturne Doré',
+    desc: 'Lumières chaudes, plateau de nuit',
+    prompt: 'cinematic night shooting on a film set, warm golden practical lights, deep shadows, bokeh, moody backstage atmosphere, champagne gold tones, ARRI Alexa aesthetic, 35mm film grain'
+  },
+  {
+    id: 'premiere-red',
+    icon: '🎟️',
+    name: 'Avant-Première',
+    desc: 'Tapis rouge, flashs, prestige',
+    prompt: 'premiere red carpet atmosphere, paparazzi flash bursts, elegant dark background, velvet red accents, golden spotlight, red carpet glamour, luxury cinema aesthetic'
+  },
+  {
+    id: 'limousine-noir',
+    icon: '🚙',
+    name: 'Limousine Noire',
+    desc: 'Cuir noir, vitres teintées',
+    prompt: 'inside a black luxury limousine, tinted windows, warm amber interior lighting, dark leather seats, cinematic car interior, reflections on glass, premium nightlife aesthetic'
+  },
+  {
+    id: 'studio-set',
+    icon: '🎬',
+    name: 'Plateau Studio',
+    desc: 'Caméras, câbles, clap',
+    prompt: 'behind the scenes on a professional film set, cinema camera rigs, C-stands, cables, clapperboard, softbox lighting, director\'s monitor glow, authentic production atmosphere'
+  },
+  {
+    id: 'champagne-toast',
+    icon: '🥂',
+    name: 'Champagne & Toasts',
+    desc: 'Célébration, flûtes, éclats',
+    prompt: 'elegant champagne celebration, golden liquid splashes, crystal glasses, warm festive lighting, luxurious soirée, shallow depth of field, celebratory golden bokeh'
+  },
+  {
+    id: 'vintage-cinema',
+    icon: '📽️',
+    name: 'Cinéma Vintage',
+    desc: 'Grain argentique, couleurs délavées',
+    prompt: 'vintage 1970s cinema aesthetic, faded warm colors, analog film grain, retro color grading, warm sepia tones, classic Hollywood glamour, soft cinematic haze'
+  },
+  {
+    id: 'noir-detective',
+    icon: '🕵️',
+    name: 'Noir Détective',
+    desc: 'Noir & blanc, ombres dures',
+    prompt: 'film noir aesthetic, high contrast black and white, dramatic chiaroscuro, venetian blind shadows, cigarette smoke haze, 1940s detective atmosphere, moody and mysterious'
+  },
+  {
+    id: 'neon-urbain',
+    icon: '🌃',
+    name: 'Néon Urbain',
+    desc: 'Ville la nuit, reflets roses',
+    prompt: 'neon-soaked urban night, wet asphalt reflections, pink and cyan neon signs, cinematic cyberpunk atmosphere, moody nocturnal city, blade runner aesthetic'
+  },
+  {
+    id: 'golden-hour-cine',
+    icon: '🌅',
+    name: 'Golden Hour Ciné',
+    desc: 'Lumière dorée, longues ombres',
+    prompt: 'golden hour cinematic lighting, warm amber sunlight, long dramatic shadows, hazy glow, lens flare, romantic cinematic atmosphere, film production quality'
+  },
+  {
+    id: 'studio-monochrome',
+    icon: '⚫',
+    name: 'Monochrome Studio',
+    desc: 'N&B élégant, fond noir',
+    prompt: 'elegant black and white studio portrait, dramatic single-source lighting, deep black background, high contrast monochrome, timeless fashion photography aesthetic'
+  },
+  {
+    id: 'dressing-room',
+    icon: '💄',
+    name: 'Loge & Miroir',
+    desc: 'Bulbes, miroir, préparation',
+    prompt: 'backstage dressing room with vanity mirror, warm bulb lights around the mirror, makeup brushes, elegant preparation moment, intimate backstage atmosphere, warm golden glow'
+  },
+  {
+    id: 'camera-focus',
+    icon: '📷',
+    name: 'Objectif Cinéma',
+    desc: 'Gros plan, profondeur de champ',
+    prompt: 'extreme close-up shot, shallow depth of field, cinema lens bokeh, subject intensely framed, dramatic cinematic composition, ARRI signature look, film production quality'
+  }
+];
+
+const INTENSITY_PROMPTS = {
+  subtle: 'The reference image must remain HIGHLY recognizable. Preserve exact facial features, hair, skin tone, expression, pose, and identity. Apply the aesthetic as a subtle cinematic overlay — lighting, atmosphere, and color grade only.',
+  moderate: 'Balance between reference identity and cinematic aesthetic. Subject remains clearly recognizable while the environment, lighting, and mood are fully transformed. Preserve facial structure, adapt wardrobe, background, and atmosphere.',
+  strong: 'The cinematic aesthetic dominates completely. Transform boldly: environment, wardrobe, pose, lighting, color grade. Keep the essence of the subject recognizable through facial features and distinctive characteristics.'
+};
+
+// Variations pour les 20 images
+const CAMERA_ANGLES = [
+  'medium shot, eye-level, direct gaze into camera',
+  'close-up portrait, intense cinematic framing',
+  'slight low angle, powerful presence',
+  'three-quarter profile, dramatic side lighting',
+  'wide establishing shot, subject in environment',
+  'over-the-shoulder framing, cinematic depth',
+  'high angle looking down, intimate moment',
+  'silhouette against bright background',
+  'symmetrical front-facing composition',
+  'dynamic tilted angle, editorial energy'
+];
+
+const MOMENTS = [
+  'between takes, relaxed and confident',
+  'arriving at the set, walking purposefully',
+  'preparing for the scene, focused expression',
+  'sharing a laugh with the crew',
+  'reviewing the shot on a monitor',
+  'signing autographs, warm smile',
+  'in conversation with the director',
+  'checking the mirror one last time',
+  'stepping out of the trailer',
+  'final pose, camera ready'
+];
+
+const ATMOSPHERES = [
+  'dust particles floating in light beams',
+  'soft haze in the air',
+  'shallow depth of field with creamy bokeh',
+  'lens flare from practical lights',
+  'film grain texture',
+  'subtle motion blur in the background',
+  'warm rim light on the subject',
+  'dramatic negative space',
+  'rich shadow detail',
+  'glossy cinematic finish'
+];
+
+// ══════════════════════════════════════════════════════════════════
+// ÉTAT
+// ══════════════════════════════════════════════════════════════════
+const state = {
+  isRunning: false,
+  stopRequested: false,
+  referenceImage: null,
+  selectedVibe: 'nocturne-gold',
+  customPrompt: '',
+  intensity: 'moderate',
+  images: [],
+  completed: 0,
+  failed: 0
+};
+
+let createImageIntervalMs = IMAGE_INTERVAL_SAFE;
+let imageAttemptsSinceLastError = 0;
+
+// ══════════════════════════════════════════════════════════════════
+// UTILS
+// ══════════════════════════════════════════════════════════════════
+function esc(s) {
+  return String(s == null ? '' : s).replace(/[&<>"']/g, c => (
+    { '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c]));
+}
+function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+// ══════════════════════════════════════════════════════════════════
+// CONSOLE DEBUG
+// ══════════════════════════════════════════════════════════════════
+let debugCount = 0, debugEntries = [], debugCollapsed = false;
+
+function debugLog(level, category, message, data) {
+  const body = document.getElementById('debug-body');
+  if (!body) return;
+  const time = new Date().toLocaleTimeString('fr-FR', { hour12: false });
+  const entry = document.createElement('div');
+  entry.className = 'debug-entry ' + level;
+  let html = '<span class="debug-time">' + time + '</span>';
+  html += '<span class="debug-cat">[' + esc(category) + ']</span>';
+  html += '<span>' + esc(message) + '</span>';
+  if (data !== undefined && data !== null) {
+    let dataStr;
+    if (typeof data === 'string') dataStr = data;
+    else { try { dataStr = JSON.stringify(data, null, 2); } catch (e) { dataStr = String(data); } }
+    if (dataStr.length > 2500) dataStr = dataStr.slice(0, 2500) + '…[tronqué]';
+    html += '<pre style="margin:0.2rem 0 0 1rem; font-size:0.6rem; color:#f0e0b8; max-height:100px; overflow:auto;">' + esc(dataStr) + '</pre>';
+  }
+  entry.innerHTML = html;
+  body.appendChild(entry);
+  debugEntries.push({ time, level, category, message });
+  if (debugEntries.length > 500) debugEntries.shift();
+  while (body.children.length > 500) body.removeChild(body.firstChild);
+  body.scrollTop = body.scrollHeight;
+  debugCount++;
+  const countEl = document.getElementById('debug-count');
+  if (countEl) countEl.textContent = debugCount;
+}
+
+function clearDebug() {
+  const body = document.getElementById('debug-body');
+  if (body) body.innerHTML = '';
+  debugEntries = []; debugCount = 0;
+  const countEl = document.getElementById('debug-count');
+  if (countEl) countEl.textContent = '0';
+  debugLog('info', 'SYSTEM', 'Console effacée');
+}
+
+function copyDebug() {
+  const lines = debugEntries.map(e => e.time + ' [' + e.category + '] ' + e.message).join('\n');
+  const finish = (ok) => showToast(ok ? 'Console copiée' : 'Copie impossible', ok ? 'success' : 'error');
+  try {
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(lines).then(() => finish(true)).catch(() => legacyCopy(lines, finish));
+      return;
+    }
+  } catch (e) {}
+  legacyCopy(lines, finish);
+}
+
+function legacyCopy(text, cb) {
+  const ta = document.createElement('textarea');
+  ta.value = text; ta.style.position = 'fixed'; ta.style.opacity = '0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  let ok = false;
+  try { ok = document.execCommand('copy'); } catch (e) { ok = false; }
+  document.body.removeChild(ta); cb(ok);
+}
+
+function toggleDebugCollapse() {
+  const panel = document.getElementById('debug-panel');
+  const btn = document.getElementById('debug-collapse-btn');
+  if (!panel || !btn) return;
+  debugCollapsed = !debugCollapsed;
+  panel.classList.toggle('collapsed', debugCollapsed);
+  btn.textContent = debugCollapsed ? '+' : '−';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// TOAST
+// ══════════════════════════════════════════════════════════════════
+let toastTimeout = null;
+function showToast(message, type = 'success', duration = 2500) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  toast.classList.remove('visible', 'success', 'error', 'warn');
+  void toast.offsetWidth;
+  const icons = { success: '✓', error: '✕', warn: '⚠' };
+  const iconEl = document.getElementById('toast-icon');
+  const textEl = document.getElementById('toast-text');
+  if (iconEl) iconEl.textContent = icons[type] || '✓';
+  if (textEl) textEl.textContent = message;
+  toast.classList.add(type);
+  requestAnimationFrame(() => toast.classList.add('visible'));
+  if (toastTimeout) clearTimeout(toastTimeout);
+  toastTimeout = setTimeout(() => toast.classList.remove('visible'), duration);
+}
+
+// ══════════════════════════════════════════════════════════════════
+// WAKE LOCK
+// ══════════════════════════════════════════════════════════════════
+let wakeLockSentinel = null, wakeLockEnabled = false;
+let canvasStream = null, canvasInterval = null;
+
+function isWakeLockSupported() { return 'wakeLock' in navigator && typeof navigator.wakeLock.request === 'function'; }
+
+async function requestWakeLockAPI() {
+  if (!isWakeLockSupported()) return false;
+  try {
+    wakeLockSentinel = await navigator.wakeLock.request('screen');
+    wakeLockSentinel.addEventListener('release', () => { wakeLockSentinel = null; updateWakeStatus(); });
+    return true;
+  } catch (e) { debugLog('warn', 'WAKELOCK', 'Refusé : ' + e.message); return false; }
+}
+
+async function releaseWakeLockAPI() {
+  if (wakeLockSentinel) { try { await wakeLockSentinel.release(); } catch (e) {} wakeLockSentinel = null; }
+}
+
+function startCanvasStream() {
+  if (canvasStream) return true;
+  try {
+    const canvas = document.getElementById('noSleepCanvas');
+    const video = document.getElementById('noSleepVideo');
+    if (!canvas || !video) return false;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return false;
+    ctx.fillStyle = '#000000'; ctx.fillRect(0, 0, canvas.width, canvas.height);
+    if (typeof canvas.captureStream !== 'function') return false;
+    canvasStream = canvas.captureStream(1);
+    let toggle = false;
+    canvasInterval = setInterval(() => { toggle = !toggle; ctx.fillStyle = toggle ? '#000000' : '#010101'; ctx.fillRect(0, 0, canvas.width, canvas.height); }, 1000);
+    video.srcObject = canvasStream; video.muted = true; video.playsInline = true;
+    const p = video.play(); if (p && p.catch) p.catch(() => {});
+    return true;
+  } catch (e) { debugLog('warn', 'WAKELOCK', 'Canvas fallback échoué : ' + e.message); return false; }
+}
+
+function stopCanvasStream() {
+  if (canvasInterval) { clearInterval(canvasInterval); canvasInterval = null; }
+  const video = document.getElementById('noSleepVideo');
+  if (video) { try { video.pause(); video.srcObject = null; } catch (e) {} }
+  if (canvasStream) { try { canvasStream.getTracks().forEach(t => t.stop()); } catch (e) {} canvasStream = null; }
+}
+
+async function activateWakeLock() {
+  let success = false;
+  if (isWakeLockSupported()) success = await requestWakeLockAPI();
+  if (!success) success = startCanvasStream();
+  if (!success && !canvasStream) success = startCanvasStream();
+  return success;
+}
+
+async function deactivateWakeLock() { await releaseWakeLockAPI(); stopCanvasStream(); }
+
+function updateWakeStatus() {
+  const el = document.getElementById('wake-status');
+  const txt = document.getElementById('wake-status-text');
+  const btn = document.getElementById('wake-toggle-btn');
+  if (!el || !txt || !btn) return;
+  el.classList.remove('active', 'warn');
+  const canvas = document.getElementById('noSleepCanvas');
+  const has = isWakeLockSupported() || (canvas && canvas.captureStream);
+  if (!has) { el.classList.add('warn'); txt.textContent = '⚠️ Non supporté'; btn.style.display = 'none'; return; }
+  btn.style.display = 'inline-block';
+  const isActive = wakeLockSentinel !== null || canvasStream !== null;
+  if (wakeLockEnabled && isActive) { el.classList.add('active'); txt.textContent = '✅ Écran allumé'; btn.textContent = 'Désactiver'; }
+  else if (wakeLockEnabled && !isActive) { el.classList.add('warn'); txt.textContent = '⏳ En attente'; btn.textContent = 'Désactiver'; }
+  else { txt.textContent = '💤 Veille automatique'; btn.textContent = 'Garder l\'écran allumé'; }
+}
+
+async function toggleWakeLock() {
+  if (wakeLockEnabled) {
+    wakeLockEnabled = false; await deactivateWakeLock();
+    try { localStorage.setItem(WAKE_LOCK_PREF, '0'); } catch (e) {}
+    showToast('Veille automatique', 'warn');
+  } else {
+    wakeLockEnabled = true;
+    const ok = await activateWakeLock();
+    try { localStorage.setItem(WAKE_LOCK_PREF, '1'); } catch (e) {}
+    showToast(ok ? 'Écran allumé' : 'Activez manuellement', ok ? 'success' : 'warn');
+  }
+  updateWakeStatus();
+}
+
+document.addEventListener('visibilitychange', async () => {
+  if (document.visibilityState === 'visible' && wakeLockEnabled) { await activateWakeLock(); updateWakeStatus(); }
+});
+
+async function ensureWakeLockActive() {
+  if (!wakeLockEnabled) return;
+  if (wakeLockSentinel === null && canvasStream === null) { await activateWakeLock(); updateWakeStatus(); }
+}
+
+// ══════════════════════════════════════════════════════════════════
+// TIMING CACHE
+// ══════════════════════════════════════════════════════════════════
+function loadTimingCache() { try { return JSON.parse(localStorage.getItem(TIMING_CACHE_KEY) || '{}'); } catch (e) { return {}; } }
+function saveTimingCache(c) { try { localStorage.setItem(TIMING_CACHE_KEY, JSON.stringify(c)); } catch (e) {} }
+function recordGenerationTime(key, ms) {
+  const c = loadTimingCache();
+  if (!c[key]) c[key] = [];
+  c[key].push(ms);
+  if (c[key].length > 10) c[key] = c[key].slice(-10);
+  saveTimingCache(c); updateTimingDisplay();
+}
+function estimateGenerationTime(key, fallbackMs) {
+  const c = loadTimingCache();
+  const s = c[key];
+  if (s && s.length > 0) {
+    const sorted = [...s].sort((a, b) => a - b);
+    const mid = Math.floor(sorted.length / 2);
+    return sorted.length % 2 === 0 ? (sorted[mid-1] + sorted[mid]) / 2 : sorted[mid];
+  }
+  return fallbackMs;
+}
+function updateTimingDisplay() {
+  const c = loadTimingCache();
+  const v = c['image'] || [];
+  const s = document.getElementById('stat-speed');
+  const t = document.getElementById('stat-samples');
+  if (!s || !t) return;
+  if (v.length === 0) { s.textContent = 'en attente'; t.textContent = '0 génération'; return; }
+  const avg = v.reduce((a, b) => a + b, 0) / v.length;
+  s.textContent = (avg / 1000).toFixed(1) + ' s en moyenne';
+  t.textContent = v.length + ' génération' + (v.length > 1 ? 's' : '');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// CLÉ API
+// ══════════════════════════════════════════════════════════════════
+function getApiKey() { try { return (localStorage.getItem(API_KEY_STORAGE) || '').trim(); } catch (e) { return ''; } }
+
+function saveApiKey() {
+  const input = document.getElementById('api-key-input');
+  if (!input) return;
+  const key = input.value.trim();
+  if (!key) {
+    try { localStorage.removeItem(API_KEY_STORAGE); } catch (e) {}
+    updateApiPanel(); showToast('Clé supprimée', 'warn'); return;
+  }
+  if (!key.startsWith('sk-')) { if (!confirm('La clé ne commence pas par "sk-". Sauvegarder ?')) return; }
+  try {
+    localStorage.setItem(API_KEY_STORAGE, key);
+    updateApiPanel(); showToast('Clé enregistrée ✓', 'success');
+    debugLog('success', 'API', 'Clé : ' + key.slice(0, 8) + '…' + key.slice(-4));
+    input.blur();
+  } catch (e) { showToast('Erreur sauvegarde', 'error'); }
+}
+
+function updateApiPanel() {
+  const panel = document.getElementById('api-panel');
+  const input = document.getElementById('api-key-input');
+  const statusLine = document.getElementById('api-status-line');
+  const statusText = document.getElementById('api-status-text');
+  const key = getApiKey();
+  if (!panel || !input || !statusLine || !statusText) return;
+  if (key) {
+    panel.classList.add('ok'); statusLine.classList.add('ok');
+    statusText.textContent = 'Clé active · ' + key.slice(0, 8) + '…' + key.slice(-4);
+    input.value = key; input.placeholder = '';
+  } else {
+    panel.classList.remove('ok'); statusLine.classList.remove('ok');
+    statusText.textContent = 'Aucune clé API enregistrée';
+    input.value = ''; input.placeholder = 'Collez votre clé API Agnes (sk-...)';
+  }
+  updateGenerateBtn();
+}
+
+function updateGenerateBtn() {
+  const btn = document.getElementById('generate-btn');
+  if (!btn) return;
+  const hasKey = !!getApiKey();
+  const hasRef = !!state.referenceImage;
+  btn.disabled = !hasKey || !hasRef || state.isRunning;
+  if (state.isRunning) btn.textContent = '🎬 Création en cours… (' + state.completed + '/20)';
+  else if (!hasRef) btn.textContent = '🎬 Ajoutez une image de référence';
+  else if (!hasKey) btn.textContent = '🎬 Ajoutez votre clé API';
+  else btn.textContent = '🎬 Lancer · 20 images virales';
+}
+
+function setStatus(text) {
+  const bar = document.getElementById('status-bar');
+  const txt = document.getElementById('status-text');
+  if (!bar || !txt) return;
+  if (text) { bar.classList.add('visible'); txt.textContent = text; }
+  else bar.classList.remove('visible');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// IMAGE DE RÉFÉRENCE
+// ══════════════════════════════════════════════════════════════════
+async function compressReferenceImage(dataUrl) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = () => {
+      let { width, height } = img;
+      const scale = Math.min(1, REF_MAX_SIDE / Math.max(width, height));
+      width = Math.round(width * scale); height = Math.round(height * scale);
+      const canvas = document.createElement('canvas');
+      canvas.width = width; canvas.height = height;
+      canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+      resolve(canvas.toDataURL('image/jpeg', 0.88));
+    };
+    img.onerror = () => resolve(dataUrl);
+    img.src = dataUrl;
+  });
+}
+
+async function handleReferenceImage(file) {
+  if (!file || !file.type.startsWith('image/')) { showToast('Fichier non image', 'error'); return; }
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    const compressed = await compressReferenceImage(e.target.result);
+    state.referenceImage = compressed;
+    updateRefPreview();
+    updateGenerateBtn();
+    debugLog('success', 'REF', 'Image chargée (' + Math.round(compressed.length / 1024) + ' Ko)');
+    showToast('Référence prête', 'success');
+  };
+  reader.onerror = () => showToast('Erreur lecture image', 'error');
+  reader.readAsDataURL(file);
+}
+
+function updateRefPreview() {
+  const drop = document.getElementById('ref-drop');
+  if (!drop) return;
+  if (state.referenceImage) {
+    drop.classList.add('has-image');
+    drop.innerHTML = '<div class="ref-preview"><img src="' + state.referenceImage + '" alt="Référence"><div class="ref-label">Référence · base des 20 images</div><button type="button" class="ref-remove" id="ref-remove-btn">✕</button></div>';
+    const btn = document.getElementById('ref-remove-btn');
+    if (btn) btn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      state.referenceImage = null;
+      updateRefPreview();
+      updateGenerateBtn();
+      showToast('Référence supprimée', 'warn');
+    });
+  } else {
+    drop.classList.remove('has-image');
+    drop.innerHTML = '<input type="file" accept="image/*" id="ref-image-input">' +
+      '<div class="ref-icon">🎥</div>' +
+      '<div class="ref-text"><strong>Cliquez pour choisir votre image</strong><br>Un portrait, une scène, un moment des coulisses…</div>' +
+      '<div class="ref-hint">Cette image sera la base de toutes les 20 variations.</div>';
+    bindRefInput();
+  }
+}
+
+function bindRefInput() {
+  const input = document.getElementById('ref-image-input');
+  if (!input) return;
+  input.addEventListener('change', (e) => {
+    const file = e.target.files && e.target.files[0];
+    if (file) handleReferenceImage(file);
+  });
+}
+
+// ══════════════════════════════════════════════════════════════════
+// BUILD PROMPT
+// ══════════════════════════════════════════════════════════════════
+function buildImagePrompt(index) {
+  const vibe = VIBES.find(v => v.id === state.selectedVibe) || VIBES[0];
+  const intensityPrompt = INTENSITY_PROMPTS[state.intensity] || INTENSITY_PROMPTS.moderate;
+
+  const angle = CAMERA_ANGLES[index % CAMERA_ANGLES.length];
+  const moment = MOMENTS[(index + Math.floor(index / CAMERA_ANGLES.length)) % MOMENTS.length];
+  const atmosphere = ATMOSPHERES[(index * 3 + 1) % ATMOSPHERES.length];
+
+  const parts = [
+    'Generate ONE cinematic image based on the reference image provided.',
+    '',
+    'UNIVERSE / AESTHETIC: ' + vibe.prompt + '.',
+    '',
+    'SUBJECT: The person from the reference image — ' + moment + '.',
+    'CAMERA: ' + angle + '.',
+    'ATMOSPHERE: ' + atmosphere + '.',
+    '',
+    intensityPrompt,
+    '',
+    'CRITICAL IDENTITY LOCK: Preserve the subject\'s identity from the reference image — facial features, hair color and length, skin tone, eye color, distinctive characteristics. The subject must be clearly recognizable as the same person across all variations.',
+    '',
+    'Portrait 9:16 vertical format, cinematic composition, film production quality, professional color grading, high detail, photorealistic.',
+    'No text, no watermarks, no logos, no subtitles, no extra people, no distorted hands or faces.'
+  ];
+
+  if (state.customPrompt && state.customPrompt.trim()) {
+    parts.push('');
+    parts.push('ADDITIONAL DIRECTION: ' + state.customPrompt.trim());
+  }
+
+  return parts.join('\n');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// API FETCH avec retry
+// ══════════════════════════════════════════════════════════════════
+async function apiFetch(url, options = {}, label = 'API', kind = 'default') {
+  for (let attempt = 0; attempt < 7; attempt++) {
+    if (state.stopRequested) throw new Error('Arrêt demandé');
+    const method = options.method || 'GET';
+    let bodyPreview = null;
+    if (options.body) {
+      try {
+        const p = JSON.parse(options.body);
+        const c = JSON.parse(JSON.stringify(p));
+        if (c.image && typeof c.image === 'string' && c.image.length > 80) c.image = c.image.slice(0, 80) + '…[b64 ' + c.image.length + ']';
+        bodyPreview = c;
+      } catch (e) { bodyPreview = options.body.slice(0, 500); }
+    }
+    debugLog('api', 'REQ ' + label, method + ' ' + url + ' (tentative ' + (attempt + 1) + ')', bodyPreview);
+
+    try {
+      const t0 = Date.now();
+      const res = await fetch(url, options);
+      const dt = Date.now() - t0;
+      debugLog('api', 'RÉP ' + label, 'HTTP ' + res.status + ' en ' + dt + 'ms');
+
+      if (res.status === 429) {
+        imageAttemptsSinceLastError = 0;
+        if (createImageIntervalMs < IMAGE_INTERVAL_MAX) {
+          createImageIntervalMs = Math.min(createImageIntervalMs + 1500, IMAGE_INTERVAL_MAX);
+        }
+        const wait = [10, 20, 35, 50, 75, 100, 150][Math.min(attempt, 6)];
+        debugLog('warn', 'RATELIMIT', '429 — attente ' + wait + 's');
+        setStatus('L\'IA se prépare… (' + wait + 's)');
+        await sleep(wait * 1000); continue;
+      }
+      if (res.status === 503) {
+        const wait = [5, 10, 15, 20, 30, 45][Math.min(attempt, 5)];
+        debugLog('warn', 'SERVICE', '503 — attente ' + wait + 's');
+        setStatus('Le studio se prépare… (' + wait + 's)');
+        await sleep(wait * 1000); continue;
+      }
+      if (res.ok) {
+        imageAttemptsSinceLastError++;
+        if (imageAttemptsSinceLastError >= 5 && createImageIntervalMs > IMAGE_INTERVAL_MIN) {
+          createImageIntervalMs = Math.max(createImageIntervalMs - 200, IMAGE_INTERVAL_MIN);
+          imageAttemptsSinceLastError = 0;
+        }
+      }
+      return res;
+    } catch (e) {
+      if (e.message === 'Arrêt demandé') throw e;
+      const wait = [3, 5, 8, 12, 20, 30][Math.min(attempt, 5)];
+      debugLog('warn', 'NETWORK', e.message + ' — retry ' + wait + 's');
+      setStatus('Connexion… (' + wait + 's)');
+      await sleep(wait * 1000);
+    }
+  }
+  debugLog('error', 'API', 'Tentatives épuisées pour ' + label);
+  return fetch(url, options);
+}
+
+async function generateImage(prompt) {
+  const body = { model: MODEL_IMAGE, prompt: prompt, n: 1, size: '1024x1792', response_format: 'url' };
+  const res = await apiFetch(API_BASE + '/images/generations', {
+    method: 'POST',
+    headers: { 'Authorization': 'Bearer ' + getApiKey(), 'Content-Type': 'application/json' },
+    body: JSON.stringify(body)
+  }, 'Image', 'image');
+  if (!res.ok) {
+    const err = await res.text();
+    debugLog('error', 'IMAGE', 'HTTP ' + res.status, err.slice(0, 500));
+    throw new Error('HTTP ' + res.status);
+  }
+  const data = await res.json();
+  const item = data.data && data.data[0];
+  if (!item) throw new Error('Pas de donnée image');
+  if (item.url) return item.url;
+  if (item.b64_json) return 'data:image/png;base64,' + item.b64_json;
+  throw new Error('Format image inconnu');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// QUEUE PARALLÈLE
+// ══════════════════════════════════════════════════════════════════
+function createRateLimitedQueue(maxConcurrent, minIntervalMs) {
+  let running = 0, lastStart = 0;
+  const queue = [];
+  let resolveIdle = null;
+
+  function tryNext() {
+    if (running >= maxConcurrent) return;
+    if (queue.length === 0) {
+      if (running === 0 && resolveIdle) { resolveIdle(); resolveIdle = null; }
+      return;
+    }
+    const now = Date.now();
+    const wait = Math.max(0, lastStart + minIntervalMs - now);
+    if (wait > 0) { setTimeout(tryNext, wait); return; }
+    const task = queue.shift();
+    running++; lastStart = Date.now();
+    task().finally(() => { running--; setTimeout(tryNext, 0); });
+  }
+
+  return {
+    add(fn) { return new Promise((resolve, reject) => { queue.push(() => fn().then(resolve, reject)); setTimeout(tryNext, 0); }); },
+    idle() { return new Promise(r => { if (running === 0 && queue.length === 0) return r(); resolveIdle = r; }); }
+  };
+}
+
+// ══════════════════════════════════════════════════════════════════
+// RENDU UI
+// ══════════════════════════════════════════════════════════════════
+function renderVibes() {
+  const grid = document.getElementById('vibe-grid');
+  if (!grid) return;
+  grid.innerHTML = VIBES.map(v => 
+    '<div class="vibe-card' + (state.selectedVibe === v.id ? ' selected' : '') + '" data-vibe="' + v.id + '">' +
+      '<div class="vibe-icon">' + v.icon + '</div>' +
+      '<div class="vibe-name">' + esc(v.name) + '</div>' +
+      '<div class="vibe-desc">' + esc(v.desc) + '</div>' +
+    '</div>'
+  ).join('');
+  grid.querySelectorAll('[data-vibe]').forEach(el => {
+    el.addEventListener('click', () => {
+      state.selectedVibe = el.dataset.vibe;
+      renderVibes();
+      const v = VIBES.find(x => x.id === state.selectedVibe);
+      debugLog('info', 'VIBE', 'Ambiance : ' + (v ? v.name : state.selectedVibe));
+    });
+  });
+}
+
+function renderImagesGrid() {
+  const grid = document.getElementById('images-grid');
+  if (!grid) return;
+  let html = '';
+  for (let i = 0; i < TOTAL_IMAGES; i++) {
+    const img = state.images[i];
+    const label = 'N° ' + (i + 1);
+    if (img && img.url) {
+      html += '<div class="image-card done" data-img="' + i + '"><img src="' + img.url + '" alt=""><div class="img-label">' + label + '</div></div>';
+    } else {
+      html += '<div class="image-card loading" data-img="' + i + '">' + label + '</div>';
+    }
+  }
+  grid.innerHTML = html;
+  const countEl = document.getElementById('results-count');
+  if (countEl) countEl.textContent = state.completed + '/' + TOTAL_IMAGES;
+}
+
+function updateImageCard(index, url) {
+  const el = document.querySelector('.image-card[data-img="' + index + '"]');
+  if (!el) return;
+  el.classList.remove('loading');
+  el.classList.add('done');
+  el.innerHTML = '<img src="' + url + '" alt=""><div class="img-label">N° ' + (index + 1) + '</div>';
+}
+
+// ══════════════════════════════════════════════════════════════════
+// GÉNÉRATION PRINCIPALE
+// ══════════════════════════════════════════════════════════════════
+async function startGeneration() {
+  if (state.isRunning) return;
+  if (!state.referenceImage) { showToast('Ajoutez une image de référence', 'error'); return; }
+  if (!getApiKey()) { showToast('Ajoutez votre clé API', 'error'); document.getElementById('api-key-input').focus(); return; }
+
+  state.isRunning = true;
+  state.stopRequested = false;
+  state.completed = 0;
+  state.failed = 0;
+  state.images = new Array(TOTAL_IMAGES).fill(null);
+  createImageIntervalMs = IMAGE_INTERVAL_SAFE;
+  imageAttemptsSinceLastError = 0;
+
+  document.getElementById('section-results').classList.remove('hidden');
+  document.getElementById('section-results').classList.add('open');
+  document.getElementById(' conststop-btn').classList.add(' tvisible');
+  document.getElementById('generate-btn').disabled = true;
+  updateGenerateBtn();
+  renderImagesGrid();
+
+  await ensureWakeLockActive();
+  setStatus('Démarrage — 20 images…');
+
+  const vibe = VIBES.find(v => v.id === state.selectedVibe) || VIBES[0];
+  debugLog('state', 'START', '════════════════════════════════════════');
+  debugLog('state', 'START', 'Coulisses Reel — 20 images virales');
+  debugLog('state', 'CONFIG', 'Ambiance : ' + vibe.name);
+  debugLog('state', 'CONFIG', 'Intensité : ' + state.intensity);
+  debugLog('state', 'CONFIG', 'Images : parallèle x' + IMAGE_PARALLEL + ' @ ' + IMAGE_INTERVAL_MS + 'ms');
+
+  const startTime = Date.now();
+  const queue = createRateLimitedQueue(IMAGE_PARALLEL, IMAGE_INTERVAL_MS);
+  const tasks = [];
+
+  for (let i = 0; i < TOTAL_IMAGES; i++) {
+    const idx = i;
+    tasks.push(queue.add(async () => {
+      if (state.stopRequested) return;
+0 = Date.now();
+      try {
+        const prompt = buildImagePrompt(idx);
+        debugLog('ai', 'PROMPT ' + (idx + 1), 'Envoyé', prompt.slice(0, 350) + '…');
+        const url = await generateImage(prompt);
+        state.images[idx] = { url: url };
+        updateImageCard(idx, url);
+        state.completed++;
+        const dt = ((Date.now() - t0) / 1000).toFixed(1);
+        recordGenerationTime('image', Date.now() - t0);
+        debugLog('success', 'IMAGE ' + (idx + 1) + '/20', 'OK en ' + dt + 's');
+        setStatus('Images : ' + state.completed + ' / 20 — ' + Math.round((Date.now() - startTime) / 1000) + 's');
+        renderImagesGrid();
+        updateGenerateBtn();
+      } catch (e) {
+        if (e.message === 'Arrêt demandé') return;
+        state.failed++;
+        debugLog('error', 'IMAGE ' + (idx + 1), e.message);
+        state.completed++;
+        renderImagesGrid();
+      }
+    }));
+  }
+
+  await Promise.allSettled(tasks);
+  await queue.idle();
+
+  const totalElapsed = ((Date.now() - startTime) / 1000).toFixed(1);
+  const summary = state.stopRequested
+    ? 'Arrêté — ' + state.completed + '/20 images'
+    : '✦ ' + state.completed + '/20 images en ' + totalElapsed + 's ✦';
+  debugLog('state', 'FIN', summary);
+  setStatus(summary);
+
+  state.isRunning = false;
+  state.stopRequested = false;
+  document.getElementById('stop-btn').classList.remove('visible');
+  updateGenerateBtn();
+  await deactivateWakeLock();
+
+  showToast(state.completed + ' images générées', 'success', 4000);
+  setTimeout(() => setStatus(null), 4000);
+}
+
+function stopGeneration() {
+  if (!state.isRunning) return;
+  state.stopRequested = true;
+  debugLog('warn', 'STOP', 'Arrêt demandé');
+  setStatus('Arrêt en cours…');
+}
+
+// ══════════════════════════════════════════════════════════════════
+// INITIALISATION
+// ══════════════════════════════════════════════════════════════════
+(function init() {
+  // API
+  document.getElementById('api-save-btn').addEventListener('click', saveApiKey);
+  document.getElementById('api-key-input').addEventListener('keydown', e => {
+    if (e.key === 'Enter') { e.preventDefault(); saveApiKey(); }
+  });
+
+  // Sections collapsibles
+  document.querySelectorAll('[data-toggle]').forEach(header => {
+    header.addEventListener('click', () => {
+      document.getElementById(header.dataset.toggle).classList.toggle('open');
+    });
+  });
+
+  // Image de référence
+  bindRefInput();
+
+  // Vibe grid
+  renderVibes();
+
+  // Contrôles
+  document.getElementById('custom-prompt').addEventListener('input', e => { state.customPrompt = e.target.value; });
+  document.getElementById('intensity-select').addEventListener('change', e => { state.intensity = e.target.value; });
+
+  // Boutons
+  document.getElementById('generate-btn').addEventListener('click', startGeneration);
+  document.getElementById('stop-btn').addEventListener('click', stopGeneration);
+  document.getElementById('wake-toggle-btn').addEventListener('click', toggleWakeLock);
+
+  // Debug panel
+  const debugHeader = document.getElementById('debug-header');
+  if (debugHeader) debugHeader.addEventListener('click', (e) => { if (e.target.tagName === 'BUTTON') return; toggleDebugCollapse(); });
+  const debugCollapseBtn = document.getElementById('debug-collapse-btn');
+  if (debugCollapseBtn) debugCollapseBtn.addEventListener('click', (e) => { e.stopPropagation(); toggleDebugCollapse(); });
+  const debugClearBtn = document.getElementById('debug-clear-btn');
+  if (debugClearBtn) debugClearBtn.addEventListener('click', (e) => { e.stopPropagation(); clearDebug(); });
+  const debugCopyBtn = document.getElementById('debug-copy-btn');
+  if (debugCopyBtn) debugCopyBtn.addEventListener('click', (e) => { e.stopPropagation(); copyDebug(); });
+
+  // Wake lock préférence
+  try { wakeLockEnabled = localStorage.getItem(WAKE_LOCK_PREF) === '1'; } catch (e) {}
+  if (wakeLockEnabled) activateWakeLock().then(() => updateWakeStatus());
+
+  // Rendu initial
+  updateApiPanel();
+  updateTimingDisplay();
+  updateWakeStatus();
+  renderImagesGrid();
+
+  debugLog('success', 'INIT', 'Coulisses Reel Studio prêt');
+  debugLog('info', 'INIT', 'Modèle : ' + MODEL_IMAGE);
+  debugLog('info', 'INIT', 'Ambiances disponibles : ' + VIBES.length);
+  debugLog('info', 'INIT', 'Objectif : 20 variations virales · Style unique');
+})();
+</script>
+</body>
+</html>
