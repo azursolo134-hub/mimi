@@ -59,10 +59,6 @@ h1 {
   padding: 1rem 1.15rem; margin-bottom: 1rem; font-size: 0.78rem; color: var(--ink-dim);
   line-height: 1.6; position: relative;
 }
-.info-banner::before {
-  content: '🎬'; position: absolute; top: 0.7rem; right: 0.9rem;
-  font-size: 1.4rem; opacity: 0.25;
-}
 .info-banner strong { color: var(--ink); }
 .info-banner .hl-gold { color: var(--gold-soft); font-weight: 600; }
 
@@ -86,6 +82,15 @@ h1 {
   transition: all 0.2s;
 }
 .api-save-btn:active { transform: scale(0.98); }
+.api-paste-btn {
+  width: 100%; padding: 0.9rem; border-radius: var(--radius);
+  border: 1px solid var(--success);
+  background: linear-gradient(135deg, rgba(74,157,106,0.2), rgba(74,157,106,0.1));
+  color: #a8d8b8; font-weight: 700; cursor: pointer; margin-bottom: 0.5rem;
+  text-transform: uppercase; letter-spacing: 0.15em; font-size: 0.82rem;
+  transition: all 0.2s;
+}
+.api-paste-btn:active { transform: scale(0.98); }
 .api-status-line {
   font-size: 0.75rem; padding: 0.5rem 0.8rem; border-radius: var(--radius);
   background: var(--night-2); color: var(--ink-dim); display: flex; align-items: center; gap: 0.5rem;
@@ -349,11 +354,12 @@ textarea { min-height: 85px; resize: vertical; line-height: 1.55; font-family: v
   <strong>Votre studio personnel.</strong> Ajoutez <strong class="hl-gold">une image de référence</strong> — un portrait, une scène, un moment des coulisses.
   Choisissez une <strong class="hl-gold">ambiance</strong> parmi les univers de cinéma validés pour la viralité.
   L'application génère <strong class="hl-gold">20 variations uniques</strong> dans une esthétique cohérente de plateau de tournage,
-  préservant l'identité de votre sujet. Inspiré des stratégies de cohérence de personnage validées par les tests Agnes.
+  préservant l'identité de votre sujet.
 </div>
 
 <div class="api-panel" id="api-panel">
   <input type="text" class="api-key-input" id="api-key-input" placeholder="Collez votre clé API Agnes (sk-...)" autocomplete="off" spellcheck="false">
+  <button type="button" class="api-paste-btn" id="api-paste-btn">📋 Coller la clé directement</button>
   <button type="button" class="api-save-btn" id="api-save-btn">Enregistrer la clé</button>
   <div class="api-status-line" id="api-status-line">
     <span class="status-dot"></span>
@@ -463,7 +469,7 @@ textarea { min-height: 85px; resize: vertical; line-height: 1.55; font-family: v
 
 <script>
 // ══════════════════════════════════════════════════════════════════
-// PROTOCOLES AGNES (jamais modifiés)
+// PROTOCOLES AGNES
 // ══════════════════════════════════════════════════════════════════
 const API_BASE = 'https://apihub.agnes-ai.com/v1';
 const MODEL_IMAGE = 'agnes-image-2.1-flash';
@@ -479,93 +485,33 @@ const REF_MAX_SIDE = 1280;
 const TOTAL_IMAGES = 20;
 
 // ══════════════════════════════════════════════════════════════════
-// UNIVERS COULISSES — ambiances validées pour la viralité
+// UNIVERS COULISSES
 // ══════════════════════════════════════════════════════════════════
 const VIBES = [
-  {
-    id: 'nocturne-gold',
-    icon: '🌙',
-    name: 'Nocturne Doré',
-    desc: 'Lumières chaudes, plateau de nuit',
-    prompt: 'cinematic night shooting on a film set, warm golden practical lights, deep shadows, bokeh, moody backstage atmosphere, champagne gold tones, ARRI Alexa aesthetic, 35mm film grain'
-  },
-  {
-    id: 'premiere-red',
-    icon: '🎟️',
-    name: 'Avant-Première',
-    desc: 'Tapis rouge, flashs, prestige',
-    prompt: 'premiere red carpet atmosphere, paparazzi flash bursts, elegant dark background, velvet red accents, golden spotlight, red carpet glamour, luxury cinema aesthetic'
-  },
-  {
-    id: 'limousine-noir',
-    icon: '🚙',
-    name: 'Limousine Noire',
-    desc: 'Cuir noir, vitres teintées',
-    prompt: 'inside a black luxury limousine, tinted windows, warm amber interior lighting, dark leather seats, cinematic car interior, reflections on glass, premium nightlife aesthetic'
-  },
-  {
-    id: 'studio-set',
-    icon: '🎬',
-    name: 'Plateau Studio',
-    desc: 'Caméras, câbles, clap',
-    prompt: 'behind the scenes on a professional film set, cinema camera rigs, C-stands, cables, clapperboard, softbox lighting, director\'s monitor glow, authentic production atmosphere'
-  },
-  {
-    id: 'champagne-toast',
-    icon: '🥂',
-    name: 'Champagne & Toasts',
-    desc: 'Célébration, flûtes, éclats',
-    prompt: 'elegant champagne celebration, golden liquid splashes, crystal glasses, warm festive lighting, luxurious soirée, shallow depth of field, celebratory golden bokeh'
-  },
-  {
-    id: 'vintage-cinema',
-    icon: '📽️',
-    name: 'Cinéma Vintage',
-    desc: 'Grain argentique, couleurs délavées',
-    prompt: 'vintage 1970s cinema aesthetic, faded warm colors, analog film grain, retro color grading, warm sepia tones, classic Hollywood glamour, soft cinematic haze'
-  },
-  {
-    id: 'noir-detective',
-    icon: '🕵️',
-    name: 'Noir Détective',
-    desc: 'Noir & blanc, ombres dures',
-    prompt: 'film noir aesthetic, high contrast black and white, dramatic chiaroscuro, venetian blind shadows, cigarette smoke haze, 1940s detective atmosphere, moody and mysterious'
-  },
-  {
-    id: 'neon-urbain',
-    icon: '🌃',
-    name: 'Néon Urbain',
-    desc: 'Ville la nuit, reflets roses',
-    prompt: 'neon-soaked urban night, wet asphalt reflections, pink and cyan neon signs, cinematic cyberpunk atmosphere, moody nocturnal city, blade runner aesthetic'
-  },
-  {
-    id: 'golden-hour-cine',
-    icon: '🌅',
-    name: 'Golden Hour Ciné',
-    desc: 'Lumière dorée, longues ombres',
-    prompt: 'golden hour cinematic lighting, warm amber sunlight, long dramatic shadows, hazy glow, lens flare, romantic cinematic atmosphere, film production quality'
-  },
-  {
-    id: 'studio-monochrome',
-    icon: '⚫',
-    name: 'Monochrome Studio',
-    desc: 'N&B élégant, fond noir',
-    prompt: 'elegant black and white studio portrait, dramatic single-source lighting, deep black background, high contrast monochrome, timeless fashion photography aesthetic'
-  },
-  {
-    id: 'dressing-room',
-    icon: '💄',
-    name: 'Loge & Miroir',
-    desc: 'Bulbes, miroir, préparation',
-    prompt: 'backstage dressing room with vanity mirror, warm bulb lights around the mirror, makeup brushes, elegant preparation moment, intimate backstage atmosphere, warm golden glow'
-  },
-  {
-    id: 'camera-focus',
-    icon: '📷',
-    name: 'Objectif Cinéma',
-    desc: 'Gros plan, profondeur de champ',
-    prompt: 'extreme close-up shot, shallow depth of field, cinema lens bokeh, subject intensely framed, dramatic cinematic composition, ARRI signature look, film production quality'
-  }
+  { id: 'nocturne-gold', icon: '🌙', name: 'Nocturne Doré', desc: 'Lumières chaudes, plateau de nuit',
+    prompt: 'cinematic night shooting on a film set, warm golden practical lights, deep shadows, bokeh, moody backstage atmosphere, champagne gold tones, ARRI Alexa aesthetic, 35mm film grain' },
+  { id: 'premiere-red', icon: '🎟️', name: 'Avant-Première', desc: 'Tapis rouge, flashs, prestige',
+    prompt: 'premiere red carpet atmosphere, paparazzi flash bursts, elegant dark background, velvet red accents, golden spotlight, red carpet glamour, luxury cinema aesthetic' },
+  { id: 'limousine-noir', icon: '🚙', name: 'Limousine Noire', desc: 'Cuir noir, vitres teintées',
+    prompt: 'inside a black luxury limousine, tinted windows, warm amber interior lighting, dark leather seats, cinematic car interior, reflections on glass, premium nightlife aesthetic' },
+  { id: 'studio-set', icon: '🎬', name: 'Plateau Studio', desc: 'Caméras, câbles, clap',
+    prompt: 'behind the scenes on a professional film set, cinema camera rigs, C-stands, cables, clapperboard, softbox lighting, director\'s monitor glow, authentic production atmosphere' },
+  { id: 'champagne-toast', icon: '🥂', name: 'Champagne & Toasts', desc: 'Célébration, flûtes, éclats',
+    prompt: 'elegant champagne celebration, golden liquid splashes, crystal glasses, warm festive lighting, luxurious soirée, shallow depth of field, celebratory golden bokeh' },
+  { id: 'vintage-cinema', icon: '📽️', name: 'Cinéma Vintage', desc: 'Grain argentique, couleurs délavées',
+    prompt: 'vintage 1970s cinema aesthetic, faded warm colors, analog film grain, retro color grading, warm sepia tones, classic Hollywood glamour, soft cinematic haze' },
+  { id: 'noir-detective', icon: '🕵️', name: 'Noir Détective', desc: 'Noir & blanc, ombres dures',
+    prompt: 'film noir aesthetic, high contrast black and white, dramatic chiaroscuro, venetian blind shadows, cigarette smoke haze, 1940s detective atmosphere, moody and mysterious' },
+  { id: 'neon-urbain', icon: '🌃', name: 'Néon Urbain', desc: 'Ville la nuit, reflets roses',
+    prompt: 'neon-soaked urban night, wet asphalt reflections, pink and cyan neon signs, cinematic cyberpunk atmosphere, moody nocturnal city, blade runner aesthetic' },
+  { id: 'golden-hour-cine', icon: '🌅', name: 'Golden Hour Ciné', desc: 'Lumière dorée, longues ombres',
+    prompt: 'golden hour cinematic lighting, warm amber sunlight, long dramatic shadows, hazy glow, lens flare, romantic cinematic atmosphere, film production quality' },
+  { id: 'studio-monochrome', icon: '⚫', name: 'Monochrome Studio', desc: 'N&B élégant, fond noir',
+    prompt: 'elegant black and white studio portrait, dramatic single-source lighting, deep black background, high contrast monochrome, timeless fashion photography aesthetic' },
+  { id: 'dressing-room', icon: '💄', name: 'Loge & Miroir', desc: 'Bulbes, miroir, préparation',
+    prompt: 'backstage dressing room with vanity mirror, warm bulb lights around the mirror, makeup brushes, elegant preparation moment, intimate backstage atmosphere, warm golden glow' },
+  { id: 'camera-focus', icon: '📷', name: 'Objectif Cinéma', desc: 'Gros plan, profondeur de champ',
+    prompt: 'extreme close-up shot, shallow depth of field, cinema lens bokeh, subject intensely framed, dramatic cinematic composition, ARRI signature look, film production quality' }
 ];
 
 const INTENSITY_PROMPTS = {
@@ -574,7 +520,6 @@ const INTENSITY_PROMPTS = {
   strong: 'The cinematic aesthetic dominates completely. Transform boldly: environment, wardrobe, pose, lighting, color grade. Keep the essence of the subject recognizable through facial features and distinctive characteristics.'
 };
 
-// Variations pour les 20 images
 const CAMERA_ANGLES = [
   'medium shot, eye-level, direct gaze into camera',
   'close-up portrait, intense cinematic framing',
@@ -840,16 +785,6 @@ function recordGenerationTime(key, ms) {
   if (c[key].length > 10) c[key] = c[key].slice(-10);
   saveTimingCache(c); updateTimingDisplay();
 }
-function estimateGenerationTime(key, fallbackMs) {
-  const c = loadTimingCache();
-  const s = c[key];
-  if (s && s.length > 0) {
-    const sorted = [...s].sort((a, b) => a - b);
-    const mid = Math.floor(sorted.length / 2);
-    return sorted.length % 2 === 0 ? (sorted[mid-1] + sorted[mid]) / 2 : sorted[mid];
-  }
-  return fallbackMs;
-}
 function updateTimingDisplay() {
   const c = loadTimingCache();
   const v = c['image'] || [];
@@ -1028,7 +963,7 @@ function buildImagePrompt(index) {
 }
 
 // ══════════════════════════════════════════════════════════════════
-// API FETCH avec retry
+// API FETCH
 // ══════════════════════════════════════════════════════════════════
 async function apiFetch(url, options = {}, label = 'API', kind = 'default') {
   for (let attempt = 0; attempt < 7; attempt++) {
@@ -1202,7 +1137,7 @@ async function startGeneration() {
 
   document.getElementById('section-results').classList.remove('hidden');
   document.getElementById('section-results').classList.add('open');
-  document.getElementById(' conststop-btn').classList.add(' tvisible');
+  document.getElementById('stop-btn').classList.add('visible');
   document.getElementById('generate-btn').disabled = true;
   updateGenerateBtn();
   renderImagesGrid();
@@ -1225,7 +1160,7 @@ async function startGeneration() {
     const idx = i;
     tasks.push(queue.add(async () => {
       if (state.stopRequested) return;
-0 = Date.now();
+      const t0 = Date.now();
       try {
         const prompt = buildImagePrompt(idx);
         debugLog('ai', 'PROMPT ' + (idx + 1), 'Envoyé', prompt.slice(0, 350) + '…');
@@ -1286,6 +1221,43 @@ function stopGeneration() {
     if (e.key === 'Enter') { e.preventDefault(); saveApiKey(); }
   });
 
+  // NOUVEAU : bouton coller la clé directement
+  const pasteBtn = document.getElementById('api-paste-btn');
+  if (pasteBtn) {
+    pasteBtn.addEventListener('click', async () => {
+      try {
+        let text = '';
+        if (navigator.clipboard && navigator.clipboard.readText) {
+          text = await navigator.clipboard.readText();
+        } else {
+          const input = document.getElementById('api-key-input');
+          input.focus();
+          document.execCommand('paste');
+          text = input.value;
+        }
+        text = (text || '').trim();
+        if (!text) {
+          showToast('Presse-papier vide ou accès refusé', 'error');
+          debugLog('warn', 'API', 'Presse-papier vide ou accès refusé');
+          return;
+        }
+        if (!text.startsWith('sk-')) {
+          showToast('La clé doit commencer par "sk-"', 'error');
+          debugLog('warn', 'API', 'Clé invalide : ' + text.slice(0, 20));
+          return;
+        }
+        document.getElementById('api-key-input').value = text;
+        localStorage.setItem('agnes_api_key', text);
+        updateApiPanel();
+        showToast('Clé enregistrée ✓ (' + text.length + ' caractères)', 'success');
+        debugLog('success', 'API', 'Clé collée et enregistrée directement : ' + text.slice(0, 8) + '…' + text.slice(-4));
+      } catch (e) {
+        showToast('Erreur : ' + e.message, 'error');
+        debugLog('error', 'API', 'Erreur de collage : ' + e.message);
+      }
+    });
+  }
+
   // Sections collapsibles
   document.querySelectorAll('[data-toggle]').forEach(header => {
     header.addEventListener('click', () => {
@@ -1331,7 +1303,7 @@ function stopGeneration() {
   debugLog('success', 'INIT', 'Coulisses Reel Studio prêt');
   debugLog('info', 'INIT', 'Modèle : ' + MODEL_IMAGE);
   debugLog('info', 'INIT', 'Ambiances disponibles : ' + VIBES.length);
-  debugLog('info', 'INIT', 'Objectif : 20 variations virales · Style unique');
+  debugLog('info', 'INIT', 'Astuce : utilisez le bouton vert "Coller la clé directement"');
 })();
 </script>
 </body>
