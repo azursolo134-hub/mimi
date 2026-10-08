@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Les Coulisses du Réel — Studio V5</title>
+<title>Les Coulisses du Réel — Studio V5.1</title>
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
 :root {
@@ -88,7 +88,6 @@ h1 { font-family: var(--font-serif); font-size: 2.1rem; font-weight: 300; margin
 .control-row { margin-bottom: 1rem; }
 .control-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--ink-dim); margin-bottom: 0.5rem; font-weight: 600; display: block; }
 select, textarea, input[type=text] { width: 100%; padding: 0.75rem 0.9rem; border-radius: var(--radius); border: 1px solid var(--border); background: var(--night-2); color: var(--ink); font-family: var(--font-sans); font-size: 0.85rem; -webkit-appearance: none; appearance: none; }
-select { background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='10' height='6' viewBox='0 0 10 6'><path fill='%23d4af37' d='M0 0l5 6 5-6z'/></svg>"); background-repeat: no-repeat; background-position: right 0.9rem center; background-size: 10px; padding-right: 2rem; }
 select:focus, textarea:focus, input[type=text]:focus { outline: none; border-color: var(--gold); }
 
 .vibe-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 0.5rem; margin-top: 0.5rem; }
@@ -167,15 +166,15 @@ select:focus, textarea:focus, input[type=text]:focus { outline: none; border-col
 <body>
 
 <header>
-  <div class="studio-mark">Les Coulisses du Réel · Studio V5</div>
+  <div class="studio-mark">Les Coulisses du Réel · Studio V5.1</div>
   <h1>Les Coulisses du Réel</h1>
-  <p class="subtitle">5 images · 5 textes · 1 vidéo · à l'infini</p>
+  <p class="subtitle">Personnages ou Images · Textes IA · Vidéos TikTok</p>
 </header>
 
 <div class="info-banner">
-  <strong>Le studio.</strong> Choisissez votre mode, votre ambiance et votre thème.
-  L'IA génère <strong class="hl-gold">5 textes</strong>, <strong class="hl-gold">5 images</strong> et <strong class="hl-gold">1 vidéo TikTok</strong> en ~2 minutes.
-  Relancez autant de fois que vous voulez avec le bouton <strong class="hl-gold">+5</strong>.
+  <strong>Choisissez votre mode.</strong> <strong class="hl-gold">Personnages</strong> = variations de votre portrait.
+  <strong class="hl-gold">Images</strong> = visuels conceptuels sur votre thème.
+  Chaque session génère <strong class="hl-gold">5 textes IA</strong>, <strong class="hl-gold">5 images</strong> et <strong class="hl-gold">1 vidéo TikTok</strong>.
 </div>
 
 <div class="api-panel" id="api-panel">
@@ -203,12 +202,12 @@ select:focus, textarea:focus, input[type=text]:focus { outline: none; border-col
       <div class="mode-card selected" data-mode="images">
         <span class="mode-icon">🎭</span>
         <div class="mode-name">IMAGES</div>
-        <div class="mode-desc">Conceptuelles, symboliques<br>♾️ Illimité</div>
+        <div class="mode-desc">Conceptuelles, symboliques</div>
       </div>
       <div class="mode-card" data-mode="characters">
         <span class="mode-icon">👤</span>
         <div class="mode-name">PERSONNAGES</div>
-        <div class="mode-desc">Variations de votre portrait<br>Image obligatoire</div>
+        <div class="mode-desc">Variations de votre portrait</div>
       </div>
     </div>
   </div></div>
@@ -321,9 +320,6 @@ select:focus, textarea:focus, input[type=text]:focus { outline: none; border-col
 <video id="noSleepVideo" playsinline muted loop></video>
 
 <script>
-// ══════════════════════════════════════════════════════════════════
-// CONFIG
-// ══════════════════════════════════════════════════════════════════
 const API_BASE = 'https://apihub.agnes-ai.com/v1';
 const MODEL_TEXT = 'agnes-2.5-flash';
 const MODEL_IMAGE = 'agnes-image-2.1-flash';
@@ -335,9 +331,6 @@ const REF_MAX_SIDE = 1280;
 const BATCH_SIZE = 5;
 const SECONDS_PER_IMAGE = 2;
 
-// ══════════════════════════════════════════════════════════════════
-// AMBIANCES
-// ══════════════════════════════════════════════════════════════════
 const VIBES = [
   { id: 'surveillance', icon: '📹', name: 'Surveillance', desc: 'Caméras, écrans',
     prompt: 'surveillance cameras, CCTV aesthetic, screens everywhere, control room, dystopian surveillance state' },
@@ -361,9 +354,6 @@ const VIBES = [
     prompt: 'symbolic imagery, abstract concepts, metaphorical visuals, philosophical aesthetic' }
 ];
 
-// ══════════════════════════════════════════════════════════════════
-// THÈMES
-// ══════════════════════════════════════════════════════════════════
 const THEMES = [
   { id: 'truman', name: 'Effet Truman Show', desc: 'Et si ta vie était une mise en scène ?',
     prompt: 'Et si ta vie ressemblait à The Truman Show sans que tu le saches ? Théâtre du quotidien, mise en scène de la réalité, illusions collectives, caméras cachées.' },
@@ -379,35 +369,19 @@ const THEMES = [
     prompt: 'Information et vérité, qui décide de ce que tu sais, fabrication du consentement, fake news, propagande douce.' }
 ];
 
-// ══════════════════════════════════════════════════════════════════
-// ÉTAT
-// ══════════════════════════════════════════════════════════════════
 const state = {
-  isRunning: false,
-  stopRequested: false,
+  isRunning: false, stopRequested: false,
   mode: 'images',
   referenceImage: null,
-  selectedVibe: 'surveillance',
-  selectedTheme: 'truman',
-  customTheme: '',
-  customPrompt: '',
-  texts: [],
-  images: [],
-  videos: [],
-  completed: 0,
-  failed: 0,
-  batchCount: 0
+  selectedVibe: 'surveillance', selectedTheme: 'truman',
+  customTheme: '', customPrompt: '',
+  texts: [], images: [], videos: [],
+  completed: 0, failed: 0, batchCount: 0
 };
 
-// ══════════════════════════════════════════════════════════════════
-// UTILS
-// ══════════════════════════════════════════════════════════════════
 function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[c])); }
 function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
 
-// ══════════════════════════════════════════════════════════════════
-// DEBUG
-// ══════════════════════════════════════════════════════════════════
 let debugCount = 0, debugEntries = [], debugCollapsed = false;
 function debugLog(level, category, message, data) {
   const body = document.getElementById('debug-body');
@@ -415,13 +389,7 @@ function debugLog(level, category, message, data) {
   const time = new Date().toLocaleTimeString('fr-FR', { hour12: false });
   const entry = document.createElement('div');
   entry.className = 'debug-entry ' + level;
-  let html = '<span class="debug-time">' + time + '</span><span class="debug-cat">[' + esc(category) + ']</span><span>' + esc(message) + '</span>';
-  if (data !== undefined && data !== null) {
-    let dataStr = typeof data === 'string' ? data : (() => { try { return JSON.stringify(data, null, 2); } catch(e) { return String(data); } })();
-    if (dataStr.length > 1500) dataStr = dataStr.slice(0, 1500) + '…';
-    html += '<pre style="margin:0.2rem 0 0 1rem; font-size:0.6rem; color:#f0e0b8; max-height:80px; overflow:auto;">' + esc(dataStr) + '</pre>';
-  }
-  entry.innerHTML = html;
+  entry.innerHTML = '<span class="debug-time">' + time + '</span><span class="debug-cat">[' + esc(category) + ']</span><span>' + esc(message) + '</span>';
   body.appendChild(entry);
   debugEntries.push({ time, level, category, message });
   if (debugEntries.length > 500) debugEntries.shift();
@@ -445,9 +413,6 @@ function toggleDebugCollapse() {
   b.textContent = debugCollapsed ? '+' : '−';
 }
 
-// ══════════════════════════════════════════════════════════════════
-// TOAST
-// ══════════════════════════════════════════════════════════════════
 let toastTimeout = null;
 function showToast(message, type = 'success', duration = 2500) {
   const toast = document.getElementById('toast');
@@ -461,9 +426,6 @@ function showToast(message, type = 'success', duration = 2500) {
   toastTimeout = setTimeout(() => toast.classList.remove('visible'), duration);
 }
 
-// ══════════════════════════════════════════════════════════════════
-// WAKE LOCK
-// ══════════════════════════════════════════════════════════════════
 let wakeLockSentinel = null, wakeLockEnabled = false, canvasStream = null, canvasInterval = null;
 function isWakeLockSupported() { return 'wakeLock' in navigator && typeof navigator.wakeLock.request === 'function'; }
 async function requestWakeLockAPI() {
@@ -515,10 +477,8 @@ async function toggleWakeLock() {
 document.addEventListener('visibilitychange', async () => { if (document.visibilityState === 'visible' && wakeLockEnabled) { await activateWakeLock(); updateWakeStatus(); } });
 async function ensureWakeLockActive() { if (!wakeLockEnabled) return; if (wakeLockSentinel === null && canvasStream === null) { await activateWakeLock(); updateWakeStatus(); } }
 
-// ══════════════════════════════════════════════════════════════════
-// CLÉ API
-// ══════════════════════════════════════════════════════════════════
 function getApiKey() { try { return (localStorage.getItem(API_KEY_STORAGE) || '').trim(); } catch (e) { return ''; } }
+
 function saveApiKey() {
   const input = document.getElementById('api-key-input');
   if (!input) return;
@@ -528,6 +488,7 @@ function saveApiKey() {
   updateApiPanel(); showToast('Clé enregistrée ✓', 'success');
   debugLog('success', 'API', 'Clé : ' + key.slice(0, 8) + '…' + key.slice(-4));
 }
+
 function updateApiPanel() {
   const panel = document.getElementById('api-panel'), input = document.getElementById('api-key-input'),
         statusLine = document.getElementById('api-status-line'), statusText = document.getElementById('api-status-text');
@@ -537,10 +498,12 @@ function updateApiPanel() {
   else { panel.classList.remove('ok'); statusLine.classList.remove('ok'); statusText.textContent = 'Aucune clé API enregistrée'; input.value = ''; }
   updateGenerateBtn();
 }
+
 function updateGenerateBtn() {
   const btn = document.getElementById('generate-btn');
   if (!btn) return;
-  const hasKey = !!getApiKey(), hasRef = !!state.referenceImage;
+  const hasKey = !!getApiKey();
+  const hasRef = !!state.referenceImage;
   const needsRef = state.mode === 'characters';
   const canRun = hasKey && (!needsRef || hasRef) && !state.isRunning;
   btn.disabled = !canRun;
@@ -549,15 +512,13 @@ function updateGenerateBtn() {
   else if (needsRef && !hasRef) btn.textContent = '🎬 Ajoutez une image de référence';
   else btn.textContent = '🎬 Lancer · 5 images + 1 vidéo';
 }
+
 function setStatus(text) {
   const bar = document.getElementById('status-bar'), txt = document.getElementById('status-text');
   if (!bar || !txt) return;
   if (text) { bar.classList.add('visible'); txt.textContent = text; } else bar.classList.remove('visible');
 }
 
-// ══════════════════════════════════════════════════════════════════
-// IMAGE DE RÉFÉRENCE
-// ══════════════════════════════════════════════════════════════════
 async function compressReferenceImage(dataUrl) {
   return new Promise((resolve) => {
     const img = new Image();
@@ -606,9 +567,6 @@ function bindRefInput() {
   input.addEventListener('change', (e) => { const file = e.target.files && e.target.files[0]; if (file) handleReferenceImage(file); });
 }
 
-// ══════════════════════════════════════════════════════════════════
-// API FETCH
-// ══════════════════════════════════════════════════════════════════
 async function apiFetch(url, options = {}, label = 'API') {
   for (let attempt = 0; attempt < 7; attempt++) {
     if (state.stopRequested) throw new Error('Arrêt demandé');
@@ -637,9 +595,6 @@ async function apiFetch(url, options = {}, label = 'API') {
   return fetch(url, options);
 }
 
-// ══════════════════════════════════════════════════════════════════
-// TEXTES
-// ══════════════════════════════════════════════════════════════════
 async function generateTexts() {
   const theme = state.customTheme || (THEMES.find(t => t.id === state.selectedTheme) || THEMES[0]).prompt;
   const userPrompt = `Tu es un copywriter TikTok spécialisé dans les contenus philosophiques et réflexifs.
@@ -692,9 +647,6 @@ THÈME : ${theme}`;
   return lines;
 }
 
-// ══════════════════════════════════════════════════════════════════
-// PROMPT IMAGE
-// ══════════════════════════════════════════════════════════════════
 function buildImagePrompt(index, text) {
   const vibe = VIBES.find(v => v.id === state.selectedVibe) || VIBES[0];
   const theme = state.customTheme || (THEMES.find(t => t.id === state.selectedTheme) || THEMES[0]).prompt;
@@ -748,8 +700,9 @@ function buildImagePrompt(index, text) {
   }
 }
 
+// ⚠️ CORRECTION : b64_json pour éviter le CORS sur la vidéo
 async function generateImage(prompt) {
-  const body = { model: MODEL_IMAGE, prompt: prompt, n: 1, size: '1024x1792', response_format: 'url' };
+  const body = { model: MODEL_IMAGE, prompt: prompt, n: 1, size: '1024x1792', response_format: 'b64_json' };
   const res = await apiFetch(API_BASE + '/images/generations', {
     method: 'POST',
     headers: { 'Authorization': 'Bearer ' + getApiKey(), 'Content-Type': 'application/json' },
@@ -759,16 +712,14 @@ async function generateImage(prompt) {
   const data = await res.json();
   const item = data.data && data.data[0];
   if (!item) throw new Error('Pas de donnée');
-  return item.url || ('data:image/png;base64,' + item.b64_json);
+  if (item.b64_json) return 'data:image/png;base64,' + item.b64_json;
+  if (item.url) return item.url;
+  throw new Error('Format inconnu');
 }
 
-// ══════════════════════════════════════════════════════════════════
-// INCRUSTATION TEXTE
-// ══════════════════════════════════════════════════════════════════
 async function addTextToImage(imageUrl, text) {
   return new Promise((resolve) => {
     const img = new Image();
-    img.crossOrigin = 'anonymous';
     img.onload = () => {
       try {
         const canvas = document.createElement('canvas');
@@ -823,9 +774,7 @@ async function addTextToImage(imageUrl, text) {
   });
 }
 
-// ══════════════════════════════════════════════════════════════════
-// VIDÉO
-// ══════════════════════════════════════════════════════════════════
+// ⚠️ CORRECTION : plus besoin de crossOrigin car les images sont en base64
 async function createVideoFromImages(imageUrls) {
   return new Promise(async (resolve, reject) => {
     try {
@@ -845,7 +794,6 @@ async function createVideoFromImages(imageUrls) {
       };
       const loadedImages = await Promise.all(imageUrls.map(url => new Promise((res, rej) => {
         const img = new Image();
-        img.crossOrigin = 'anonymous';
         img.onload = () => res(img);
         img.onerror = () => rej(new Error('Image load failed'));
         img.src = url;
@@ -868,9 +816,6 @@ async function createVideoFromImages(imageUrls) {
   });
 }
 
-// ══════════════════════════════════════════════════════════════════
-// QUEUE
-// ══════════════════════════════════════════════════════════════════
 function createRateLimitedQueue(maxConcurrent, minIntervalMs) {
   let running = 0, lastStart = 0;
   const queue = [];
@@ -890,9 +835,6 @@ function createRateLimitedQueue(maxConcurrent, minIntervalMs) {
   };
 }
 
-// ══════════════════════════════════════════════════════════════════
-// RENDU
-// ══════════════════════════════════════════════════════════════════
 function renderModes() {
   document.querySelectorAll('.mode-card').forEach(el => {
     el.classList.toggle('selected', el.dataset.mode === state.mode);
@@ -980,15 +922,12 @@ function renderVideosGrid() {
     '<div class="video-card">' +
       '<video src="' + v.url + '" controls playsinline preload="metadata"></video>' +
       '<div class="video-label">Vidéo ' + (i + 1) + '</div>' +
-      '<a class="video-download" href="' + v.url + '" download="coulisses-video-' + (i + 1) + '.webm">⬇ Télécharger</a>' +
+      '<a class="video-download" href="' + v.url + '" download="coulisses-' + (i + 1) + '.webm">⬇ Télécharger</a>' +
     '</div>'
   ).join('');
   document.getElementById('videos-count').textContent = state.videos.length;
 }
 
-// ══════════════════════════════════════════════════════════════════
-// PIPELINE
-// ══════════════════════════════════════════════════════════════════
 async function runBatch() {
   if (state.isRunning) return;
   if (!getApiKey()) { showToast('Ajoutez votre clé API', 'error'); return; }
@@ -1016,12 +955,10 @@ async function runBatch() {
   debugLog('state', 'START', 'Batch #' + (state.batchCount + 1) + ' — mode : ' + state.mode);
 
   try {
-    // TEXTES
     state.texts = await generateTexts();
     renderTextsList();
     debugLog('success', 'TEXTES', '5 textes OK');
 
-    // IMAGES
     setStatus('Génération des 5 images…');
     const queue = createRateLimitedQueue(IMAGE_PARALLEL, IMAGE_INTERVAL_MS);
     const tasks = [];
@@ -1048,7 +985,6 @@ async function runBatch() {
     await Promise.allSettled(tasks);
     await queue.idle();
 
-    // VIDÉO
     if (!state.stopRequested) {
       setStatus('Création de la vidéo…');
       const valid = state.images.filter(i => i && i.url).map(i => i.url);
@@ -1057,6 +993,7 @@ async function runBatch() {
           const result = await createVideoFromImages(valid);
           state.videos.push(result);
           renderVideosGrid();
+          debugLog('success', 'VIDÉO', 'Vidéo créée');
         } catch (e) { debugLog('error', 'VIDÉO', e.message); }
       }
     }
@@ -1091,14 +1028,10 @@ function stopGeneration() {
   setStatus('Arrêt en cours…');
 }
 
-// ══════════════════════════════════════════════════════════════════
-// INIT
-// ══════════════════════════════════════════════════════════════════
 (function init() {
   document.getElementById('api-save-btn').addEventListener('click', saveApiKey);
   document.getElementById('api-key-input').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); saveApiKey(); } });
 
-  // BOUTON COLLER
   document.getElementById('api-paste-btn').addEventListener('click', async () => {
     try {
       let text = '';
@@ -1159,9 +1092,8 @@ function stopGeneration() {
   updateApiPanel();
   updateWakeStatus();
 
-  debugLog('success', 'INIT', 'Coulisses Reel V5 prêt');
-  debugLog('info', 'INIT', '5 images · 5 textes · 1 vidéo par batch');
-  debugLog('info', 'INIT', 'Bouton "+5" : illimité');
+  debugLog('success', 'INIT', 'Coulisses Reel V5.1 prêt');
+  debugLog('info', 'INIT', 'Vidéo corrigée (b64_json)');
 })();
 </script>
 </body>
